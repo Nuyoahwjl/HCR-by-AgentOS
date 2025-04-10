@@ -27,7 +27,7 @@ def format_user_info(gender, age, height, weight, medical_history, symptoms, id=
 
 # 界面布局
 st.set_page_config(
-    page_title="Recommend",
+    page_title="体检推荐",
     page_icon="🥰",
 )
 
@@ -47,30 +47,29 @@ st.markdown("""
 
 
 
-TOGETHER_AI_API = st.text_input("TOGETHER_AI_API", type="password" ,help="https://api.together.xyz/")
+TOGETHER_AI_API = st.text_input("API", type="password" ,help="https://api.together.xyz/")
 if not TOGETHER_AI_API.startswith("tgp"):
-    st.warning("Please enter API!", icon="⚠️")
+    st.warning("请输入API!", icon="⚠️")
 
 
 
 
 
-id=st.text_input("ID(6 figures)", key="id", help="Please enter your ID")
+id=st.text_input("ID(6位数)", key="id", help="请输入你的ID")
 col1, col2 = st.columns(2)
 with col1:
-    gender = st.selectbox(label="Gender", 
-                          options=["male", "female", "secret"],
-                          format_func = str,
-                          help = "if you don't want to tell us, keep secret")
-    height = st.slider("Height(cm)", 0, 200, 50)
+    gender = st.selectbox(label="性别", 
+                          options=["男", "女", "保密"],
+                          format_func = str)
+    height = st.slider("身高(cm)", 0, 200, 50)
 with col2:
-    age = st.number_input("Age", 
+    age = st.number_input("年龄", 
                           min_value=0, 
                           max_value=100)
-    weight = st.slider("Weight(kg)", 0, 100, 40)
-medical_history = st.text_area("Medical History", key="medical", height=100)
-symptoms = st.text_area("Symptoms", key="symptoms", height=100)
-submitted = st.button("Recommend", icon='✔️', use_container_width=True)
+    weight = st.slider("体重(kg)", 0, 100, 40)
+medical_history = st.text_area("既往病史", key="medical", height=100)
+symptoms = st.text_area("现有症状", key="symptoms", height=100)
+submitted = st.button("生成推荐", icon='✔️', use_container_width=True)
 
 
 
@@ -79,20 +78,19 @@ if submitted:
         pass
     else:
         if height == 50 or age == 0 or weight == 40 or not medical_history.strip() or not symptoms.strip():
-            st.error("Please fill in all the information", icon="🚨")
+            st.error("请输入完整的个人信息！", icon="🚨")
         else:
             re= Recommendation(TOGETHER_AI_API)
             user_info = format_user_info(gender, age, height, weight, medical_history, symptoms, id)
-            with st.spinner("analyzing...",show_time=True):
+            with st.spinner("分析中...",show_time=True):
                 start = time.time()
                 result = re.run(user_info)
                 with st.sidebar.expander(label="TEST",expanded=True):
                     st.success(f"successfully(time:{time.time()-start:.1f}s)")
                     st.write(user_info)
                 with st.expander("RECOMMENDATIONS", expanded=True):
-                    st.markdown("## RECOMMENDATIONS")
                     st.write(result)
-                    st.download_button(label="Download", data=result, file_name="Recommendations.md", use_container_width=True, icon="📥")
+                    st.download_button(label="点击下载", data=result, file_name="体检推荐.md", use_container_width=True, icon="📥")
 
 
 

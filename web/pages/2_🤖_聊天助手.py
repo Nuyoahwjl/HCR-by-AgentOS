@@ -2,7 +2,7 @@ import streamlit as st
 from together import Together
 
 st.set_page_config(
-    page_title="Medical Chatbot",
+    page_title="聊天助手",
     page_icon="🤖",
 )
 
@@ -126,16 +126,16 @@ MEDICAL_SYSTEM_PROMPT = """
 
 # 侧边栏配置
 with st.sidebar:
-    st.header("⚙️ Settings")
+    st.header("⚙️ 设置")
     st.session_state.model = st.selectbox(
-        "Select Model",
+        "选择大模型",
         ("deepseek-ai/DeepSeek-V3"),
         index=0,
         key="model_selector"
     )
     api_key = st.text_input("API Key", type="password")
     st.markdown("---")
-    if st.button("Clear Chat History", use_container_width=True):
+    if st.button("清除聊天记录", use_container_width=True):
         st.session_state.messages = []
 
 
@@ -143,7 +143,7 @@ with st.sidebar:
 st.title("🤖 AI Medical Assistant")
 st.markdown("""
     <div class="centered-notice">
-    The information provided by this assistant is for reference only and cannot replace professional medical advice. In case of emergency, please contact healthcare professionals immediately.
+    本助手提供的信息仅供参考，不能替代专业医疗建议。在紧急情况下，请立即联系医疗专业人员。
     </div>
 """, unsafe_allow_html=True)
 
@@ -202,14 +202,3 @@ if prompt := st.chat_input("Enter your medical query..."):
     if response:
         st.session_state.messages.append({"role": "assistant", "content": response})
     
-    # # 自动滚动到底部
-    # st.markdown("""
-    # <script>
-    #     window.addEventListener("load", function() {
-    #         const input = document.querySelector(".stChatInput textarea");
-    #         if (input) {
-    #             input.scrollIntoView();
-    #         }
-    #     });
-    # </script>
-    # """, unsafe_allow_html=True)

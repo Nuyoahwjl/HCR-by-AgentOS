@@ -1,7 +1,7 @@
 import streamlit as st
  
 st.set_page_config(
-    page_title="Hospitals",
+    page_title="附近医院",
     page_icon="🏥",
 )
 
