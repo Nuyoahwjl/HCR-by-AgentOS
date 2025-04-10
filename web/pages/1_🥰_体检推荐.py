@@ -35,29 +35,16 @@ st.set_page_config(
 
 st.markdown("""
 <div style="text-align: center;">
-    <h2><b>🩺Health Check Recommendation</b></h2>
+    <h2><b>🩺体检推荐</b></h2>
 </div>
 """, unsafe_allow_html=True)
 st.markdown("""
 <div style="text-align: center;">
-    <img src="https://cdn.jsdelivr.net/gh//Nuyoahwjl/draft/typing.svg" 
+    <img src="https://cdn.jsdelivr.net/gh//Nuyoahwjl/Nuyoahwjl/HCR/typing-zh.svg" 
          style="display: block; margin: auto; width: 100%;">
 </div>
 """, unsafe_allow_html=True)
 
-
-# @st.dialog("Input your together.ai API")
-# def input():
-#     api=st.text_input("API", type="password", key="api_key" ,help="https://api.together.xyz/")
-#     submitted = st.button("Confirm", icon='✔️', use_container_width=True)
-#     if submitted:
-#         st.session_state.TOGETHER_AI_API=api
-
-# with st.sidebar:
-#     st.header("⚙️ Setting")
-#     st.button("Input API", on_click=input,use_container_width=True)
-#     if "TOGETHER_AI_API" not in st.session_state or not st.session_state.TOGETHER_AI_API.startswith("tgp"):
-#         st.warning("Please enter API!", icon="⚠️")
 
 
 TOGETHER_AI_API = st.text_input("TOGETHER_AI_API", type="password" ,help="https://api.together.xyz/")
@@ -110,19 +97,3 @@ if submitted:
 
 
 
-# if submitted:
-#     if height == 50 or age ==0 or weight ==0 or not medical_history.strip() or not symptoms.strip():
-#         st.error("Please fill in all the information", icon="🚨")
-#         # st.toast("Please fill in all the information", icon="🚨")
-#     else:
-#         user_info = format_user_info(gender, age, height, weight, medical_history, symptoms, id)
-#         with st.spinner("analyzing...",show_time=True):
-#             start = time.time()
-#             result = re.run(user_info)
-#             with st.sidebar.expander(label="TEST",expanded=True):
-#                 st.success(f"successfully(time:{time.time()-start:.1f}s)")
-#                 st.write(user_info)
-#             with st.expander("RECOMMENDATIONS", expanded=True):
-#                 st.markdown("## RECOMMENDATIONS")
-#                 st.write(result)
-#                 st.download_button(label="Download", data=result, file_name="Recommendations.md", use_container_width=True, icon="📥")
