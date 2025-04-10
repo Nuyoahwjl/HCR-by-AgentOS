@@ -17,183 +17,112 @@ st.markdown(
 
 st.markdown("-------------")
 
-st.markdown(
-"""
-## 📖 Project Overview  
-This project is an intelligent **Health Check Recommendation System** that suggests personalized medical examination packages using:  
-- 🧠 **RAG (Retrieval-Augmented Generation) technology**  
-- ⚡ **DeepSeek V3** for natural language processing  
-- 🔍 **Chormadb** vector database for efficient similarity search  
-- 🎯 **AgentOS** framework for pipeline orchestration  
-
-Designed to bridge medical knowledge with individual needs through AI-powered analysis.  
-
----
-
-## 🗂️ Project Structure  
-```bash
-HCR-by-AgentOS/
-├── config/
-│   └── settings.py
-├── data/
-│   ├──health_check_data.csv
-│   └──symptoms.pdf
-├── agentos/
-│   ├── agent/
-│   ├── memory/
-│   ├── prompt/
-│   ├── rag/
-│   ├── tools/
-│   └── utils/
-├── vectordb/
-│   ├── vector_db_1/
-│   └── vector_db_2/
-├── src/
-│   ├── vectorstore.py
-│   ├── hcr.py
-│   ├── hcr_prompts.py
-│   ├── tools.py
-│   └── utils.py
-├── test/
-├── web/
-│   ├── pages/
-│   │   ├── 1_🥰_Recommend.py
-│   │   ├── 2_🤖_Chatbot.py
-│   │   └── 3_🏥_Hospitals.py
-│   └── 🩺HCR-HOME.py
-├── requirements.txt
-└── README.md
-```
-
----
-
-## ✨ Key Features  
-- **Personalized Recommendations**  
-  🔍 Analyzes user profile + medical history → suggests tailored checkup packages  
-
-- **Multi-Source Knowledge**  
-  📚 Combines structured data (CSV) + unstructured documents (PDF)  
-
-- **Modular Architecture**  
-  📢 Separates data processing, AI logic, and UI layers  
- 
-- **User-Friendly Interface**  
-  💻 Streamlit web app with guided conversation flow 
-
----
-
-## 🛠️ Tech Stack  
-
-"""
-)
-
+# 项目简介
 st.markdown("""
-<div>
-<style>
-.tech-table {
-    width: 100% !important;
-    table-layout: fixed;
-    border-collapse: collapse;
-    margin: auto;
-    font-family: Arial, sans-serif;
-    background: transparent !important;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-.tech-table th,
-.tech-table td {
-    width: 50% !important;
-    padding: 12px;
-    text-align: left;
-    border-bottom: 2px solid rgba(222, 226, 230, 0.5); /* 半透明边框 */
-    word-break: break-word;
-    box-sizing: border-box;
-    background: transparent !important;
-}
-.tech-table th {
-    border-bottom: 3px solid rgba(73, 80, 87, 0.8); /* 深色半透明边框 */
-    font-weight: 600;
-}
-@media screen and (max-width: 600px) {
-    .tech-table {
-        font-size: 14px;
-        box-shadow: none; /* 小屏幕移除阴影 */
-    }
-    .tech-table td, 
-    .tech-table th {
-        padding: 8px;
-    }
-}
-</style>
-<table class="tech-table">
-    <colgroup>
-        <col style="width: 50%;">
-        <col style="width: 50%;">
-    </colgroup>
-    <tr>
-        <th>Component</th>
-        <th>Technology</th>
-    </tr>
-    <tr>
-        <td><strong>Large Language Model</strong></td>
-        <td>DeepSeek V3 API</td>
-    </tr>
-    <tr>
-        <td><strong>Framework</strong></td>
-        <td>AgentOS</td>
-    </tr>
-    <tr>
-        <td><strong>Vector Database</strong></td>
-        <td>Chromadb</td>
-    </tr>
-    <tr>
-        <td><strong>Frontend</strong></td>
-        <td>Streamlit</td>
-    </tr>
-    <tr>
-        <td><strong>Text Embedding</strong></td>
-        <td>BAAI/bge-base-zh</td>
-    </tr>
-    <tr>
-        <td><strong>Cross-Encoder</strong></td>
-        <td>ms-marco-MiniLM-L6-v2</td>
-    </tr>
-    <tr>
-        <td><strong>Environment</strong></td>
-        <td>Python 3.12.9</td>
-    </tr>
-</table>
+<div style="text-align: center; max-width: 800px; margin: 0 auto;">
+    <h3>📖 项目概述</h3>
+    <p style="font-size: 16px; line-height: 1.6;">
+        本系统是基于大语言模型的<strong>个性化体检推荐平台</strong>，融合：<br>
+        🧠 <strong>RAG检索增强生成技术</strong> + 
+        ⚡ <strong>DeepSeek V3</strong>大模型 + 
+        🔍 <strong>ChromaDB</strong>向量数据库 + 
+        🎯 <strong>AgentOS</strong>框架<br>
+        通过智能分析实现医疗知识与个人需求的精准匹配
+    </p>
 </div>
 """, unsafe_allow_html=True)
 
-st.markdown("-------------")
+st.markdown("---")
 
-st.warning("Let's build smarter healthcare together! 🌟 ")
 
+# 核心功能
+st.markdown("""
+<div style="text-align: center; max-width: 800px; margin: 0 auto;">
+    <h3>✨ 核心功能</h3>
+    
+    <div style="
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        margin-top: 20px;
+    ">
+        <div style="
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+        ">
+            <h4>🔍 智能推荐</h4>
+            <p>用户画像分析 + 医疗历史 → 个性化体检方案</p>
+        </div>
+        
+        <div style="
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+        ">
+            <h4>📚 多源数据</h4>
+            <p>结构化数据(CSV) + 非结构化文档(PDF)</p>
+        </div>
+        
+        <div style="
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+        ">
+            <h4>📦 模块化架构</h4>
+            <p>数据处理 / AI逻辑 / UI层 解耦设计</p>
+        </div>
+        
+        <div style="
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+        ">
+            <h4>💻 友好交互</h4>
+            <p>Streamlit可视化对话系统</p>
+        </div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+st.markdown("---")
+
+# 技术栈
 st.markdown("""
 <div style="text-align: center;">
+    <h3>🛠️ 技术架构</h3>
+    <table style="
+        margin: 0 auto;
+        border-collapse: collapse;
+        width: 70%;
+        font-family: Arial;
+    ">
+        <tr style="background: #f8f9fa;">
+            <th style="padding: 12px; border-bottom: 2px solid #dee2e6;">组件</th>
+            <th style="padding: 12px; border-bottom: 2px solid #dee2e6;">技术方案</th>
+        </tr>
+        <tr><td>大语言模型</td><td>DeepSeek V3</td></tr>
+        <tr><td>开发框架</td><td>AgentOS</td></tr>
+        <tr><td>向量数据库</td><td>ChromaDB</td></tr>
+        <tr><td>前端框架</td><td>Streamlit</td></tr>
+        <tr><td>文本嵌入</td><td>BAAI/bge-base-zh</td></tr>
+    </table>
+</div>
+""", unsafe_allow_html=True)
+
+st.markdown("---")
+
+# 结尾
+st.markdown("""
+<div style="text-align: center; margin: 40px 0;">
+    <h3 style="color: #009688;">🌟 让我们共同构建更智慧的健康未来！</h3>
     <img src="https://placehold.co/800x200/009688/FFFFFF/png?text=AI+Health+Check+Assistant&font=Lora" 
-         style="display: block; margin: auto; width: 100%;">
+         style="width: 80%; border-radius: 10px; margin-top: 20px;">
 </div>
 """, unsafe_allow_html=True)
 
 
 
-
-
-
-
-# st.markdown("""
-# 🛠️ Tech Stack  
-# | Component                | Technology           |  
-# |--------------------------|----------------------|  
-# | **Large Language Model** | DeepSeek API         |  
-# | **Framework**            | LangChain            |  
-# | **Vector Database**      | FAISS                |  
-# | **Frontend**             | Streamlit            |  
-# | **Embeddings**           | BAAI/bge-base-zh     |  
-# | **Environment**          | Python 3.12.9        |            
-# ---          
-# """)
 
 
 
@@ -205,11 +134,4 @@ with st.sidebar:
     st.success("Select one page above")
     # st.markdown("Created by [Chia.le](https://github.com/Nuyoahwjl)")
     # st.markdown("Contact me [📮](chia.le@foxmail.com)")
-    # st.markdown(
-    # """
-    #   <picture>
-    #     <img src="https://raw.githubusercontent.com/Nuyoahwjl/Nuyoahwjl/output/github-contribution-grid-snake.svg"/>
-    #   </picture>
-    # """, unsafe_allow_html=True
-    # )
     
