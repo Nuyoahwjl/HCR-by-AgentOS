@@ -143,7 +143,7 @@ with st.sidebar:
 st.title("🤖 AI Medical Assistant")
 st.markdown("""
     <div class="centered-notice">
-    本助手提供的信息仅供参考，不能替代专业医疗建议。在紧急情况下，请立即联系医疗专业人员。
+    本助手提供的信息仅供参考，不能替代专业医疗建议。紧急情况下，请立即联系专业人员。
     </div>
 """, unsafe_allow_html=True)
 

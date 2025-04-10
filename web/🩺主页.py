@@ -35,58 +35,6 @@ st.markdown("""
 st.markdown("---")
 
 
-# 核心功能
-st.markdown("""
-<div style="text-align: center; max-width: 800px; margin: 0 auto;">
-    <h3>✨ 核心功能</h3>
-    
-    <div style="
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
-        margin-top: 20px;
-    ">
-        <div style="
-            background: rgba(255,255,255,0.1);
-            padding: 20px;
-            border-radius: 10px;
-        ">
-            <h4>🔍 智能推荐</h4>
-            <p>用户画像分析 + 医疗历史 → 个性化体检方案</p>
-        </div>
-        
-        <div style="
-            background: rgba(255,255,255,0.1);
-            padding: 20px;
-            border-radius: 10px;
-        ">
-            <h4>📚 多源数据</h4>
-            <p>结构化数据(CSV) + 非结构化文档(PDF)</p>
-        </div>
-        
-        <div style="
-            background: rgba(255,255,255,0.1);
-            padding: 20px;
-            border-radius: 10px;
-        ">
-            <h4>📦 模块化架构</h4>
-            <p>数据处理 / AI逻辑 / UI层 解耦设计</p>
-        </div>
-        
-        <div style="
-            background: rgba(255,255,255,0.1);
-            padding: 20px;
-            border-radius: 10px;
-        ">
-            <h4>💻 友好交互</h4>
-            <p>Streamlit可视化对话系统</p>
-        </div>
-    </div>
-</div>
-""", unsafe_allow_html=True)
-
-st.markdown("---")
-
 # 技术栈
 st.markdown("""
 <div style="text-align: center;">
