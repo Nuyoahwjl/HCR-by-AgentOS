@@ -13,18 +13,6 @@ st.markdown("""
     /* General styling */
     body {font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
     
-    /* Input field styling */
-    .stTextInput input {
-        border-radius: 15px;
-        padding: 12px 20px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        border: 1px solid #e0e0e0;
-        transition: all 0.3s ease;
-    }
-    .stTextInput input:focus {
-        box-shadow: 0 0 0 2px rgba(74,144,226,0.2);
-    }
-    
     /* Select box styling */
     .stSelectbox select {
         border-radius: 15px;
@@ -92,13 +80,24 @@ st.markdown("""
     
     /* 通知文本居中 */
     .centered-notice {
-        text-align: center;
+        background: rgba(255, 243, 205, 0.9); 
+        border: 2px solid rgba(255, 238, 186, 0.5); 
         max-width: 800px;
-        margin: 0 auto 2rem;
-        padding: 1rem;
-        background: #fff3cd;
+        text-align: center;
         border-radius: 12px;
-        border: 2px solid #ffeeba;
+        padding: 1rem;
+        color: hsl(45, 100%, 30%); 
+        
+        /* 深色主题覆盖 */
+        @media (prefers-color-scheme: dark) {
+            background: rgba(77, 60, 15, 0.95); 
+            border-color: hsl(45, 70%, 40%);
+            max-width: 800px;
+            text-align: center;
+            border-radius: 12px;
+            padding: 1rem;
+            color: hsl(45, 70%, 80%); 
+        }
     }
     </style>
 """, unsafe_allow_html=True)
@@ -128,22 +127,22 @@ MEDICAL_SYSTEM_PROMPT = """
 with st.sidebar:
     st.header("⚙️ 设置")
     st.session_state.model = st.selectbox(
-        "选择大模型",
-        ("deepseek-ai/DeepSeek-V3"),
+        "选择模型",
+        ("deepseek-ai/DeepSeek-V3","Qwen/QwQ-32B","google/gemma-2-27b-it"),
         index=0,
         key="model_selector"
     )
     api_key = st.text_input("API Key", type="password")
     st.markdown("---")
-    if st.button("清除聊天记录", use_container_width=True):
+    if st.button("清除历史记录", use_container_width=True):
         st.session_state.messages = []
 
 
 # 主界面
-st.title("🤖 AI Medical Assistant")
+st.title("🤖 AI医疗助手")
 st.markdown("""
     <div class="centered-notice">
-    本助手提供的信息仅供参考，不能替代专业医疗建议。紧急情况下，请立即联系专业人员。
+    本助手提供的信息仅供参考，不能替代专业医疗建议。如遇紧急情况，请立即联系医疗专业人士。
     </div>
 """, unsafe_allow_html=True)
 
@@ -182,19 +181,19 @@ for message in st.session_state.messages:
 
 
 # 用户输入处理
-if prompt := st.chat_input("Enter your medical query..."):
+if prompt := st.chat_input("输入您的问题..."):
     if not api_key:
-        st.error("Please enter your API Key")
+        st.error("请输入您的 API Key")
         st.stop()
 
-    # 添加用户消息到历史
+    # 将用户消息添加到历史记录
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(f'<div class="message-container user-message">{prompt}</div>', unsafe_allow_html=True)
     
-    # 构建带系统提示的完整消息
+    # 构建包含系统提示的完整消息
     chat_history = [{"role": "system", "content": MEDICAL_SYSTEM_PROMPT}]
-    chat_history += st.session_state.messages[-6:] # 保留最近3轮对话
+    chat_history += st.session_state.messages[-6:]  # 保留最近3轮对话
     
     # 生成并显示助手回复
     with st.chat_message("assistant"):
