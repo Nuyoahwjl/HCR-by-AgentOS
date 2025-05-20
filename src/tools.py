@@ -111,3 +111,38 @@ class recommend_by_gender:
         else:
             result = "性别输入有误，请输入'male'或'female'"
         return result
+
+class calculate_bmi:
+    def __init__(self):
+        pass
+
+    def run(self, weight: float, height: float, gender: str):
+        """
+        calculate_bmi: 根据用户的体重、身高和性别计算BMI,并给出相应的健康建议。
+
+        Args:
+            weight (float): 用户的体重(kg)
+            height (float): 用户的身高(cm)
+            gender (str): 用户的性别(male/female)
+        """
+        height_m = height / 100  # 将身高从厘米转换为米
+        bmi = weight / (height_m ** 2)
+
+        if gender == "male":
+            if bmi < 20.5:
+                result = f"您的BMI为 {bmi:.2f}，处于较低水平。对于男性来说，这可能意味着您的体重过轻。建议您增加营养摄入，适当进行力量训练，以增加肌肉量。"
+            elif bmi >= 20.5 and bmi < 27.9:
+                result = f"您的BMI为 {bmi:.2f}，处于正常范围。继续保持健康的生活方式，均衡饮食，适量运动。"
+            else:
+                result = f"您的BMI为 {bmi:.2f}，处于较高水平。对于男性来说，这可能意味着您的体重过重。建议您控制饮食，增加有氧运动，如跑步、游泳等，以减轻体重。"
+        elif gender == "female":
+            if bmi < 18.5:
+                result = f"您的BMI为 {bmi:.2f}，处于较低水平。对于女性来说，这可能意味着您的体重过轻。建议您增加营养摄入，注意饮食均衡，避免过度节食。"
+            elif bmi >= 18.5 and bmi < 24:
+                result = f"您的BMI为 {bmi:.2f}，处于正常范围。继续保持健康的生活习惯，定期进行体检。"
+            else:
+                result = f"您的BMI为 {bmi:.2f}，处于较高水平。对于女性来说，这可能意味着您的体重过重。建议您控制热量摄入，加强体育锻炼，如瑜伽、跳舞等，以维持健康体重。"
+        else:
+            result = "性别输入有误，请输入'male'或'female'"
+
+        return result
