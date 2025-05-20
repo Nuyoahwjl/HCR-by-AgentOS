@@ -121,10 +121,13 @@ class calculate_bmi:
         calculate_bmi: 根据用户的体重、身高和性别计算BMI,并给出相应的健康建议。
 
         Args:
-            weight (float): 用户的体重(kg)
-            height (float): 用户的身高(cm)
+            weight (float): 患者的体重(kg)
+            height (float): 患者的身高(cm)
             gender (str): 用户的性别(male/female)
         """
+        weight = float(weight)
+        height = float(height)
+        
         height_m = height / 100  # 将身高从厘米转换为米
         bmi = weight / (height_m ** 2)
 
