@@ -12,7 +12,7 @@ import time
 import random
 
 
-def format_user_info(gender, age, height, weight, medical_history, symptoms, id="000000"):
+def format_user_info(gender, age, height, weight, medical_history, symptoms, id="000000", budget=1000):
     """格式化用户信息"""
     return {
         "id":id,
@@ -21,7 +21,8 @@ def format_user_info(gender, age, height, weight, medical_history, symptoms, id=
         "height": height,
         "weight": weight,
         "medical_history": medical_history,
-        "symptoms": symptoms
+        "symptoms": symptoms,
+        "budget": budget
     }
 
 
@@ -83,6 +84,34 @@ with col2:
     weight = st.slider("Weight(kg)", 0, 100, 40)
 medical_history = st.text_area("Medical History", key="medical", height=100)
 symptoms = st.text_area("Symptoms", key="symptoms", height=100)
+
+# 添加费用限制输入框
+budget = st.number_input("Maximum Budget (¥)", 
+                        min_value=0, 
+                        max_value=10000,
+                        value=1000,
+                        step=100,
+                        help="Enter your maximum budget for the health checkup")
+
+# 添加项目费用显示
+st.markdown("### 💰 Common Checkup Items and Prices")
+prices = {
+    "血常规": 50,
+    "血压监测": 30,
+    "血脂检查": 100,
+    "心电图": 80,
+    "血糖检测": 60,
+    "眼科检查": 120,
+    "超声心动图": 200,
+    "甲状腺功能": 150,
+    "骨密度": 180,
+    "肿瘤标志物": 300
+}
+
+# 显示项目费用表格
+price_df = pd.DataFrame(list(prices.items()), columns=['项目', '费用(¥)'])
+st.dataframe(price_df, use_container_width=True)
+
 submitted = st.button("Recommend", icon='✔️', use_container_width=True)
 
 
@@ -95,7 +124,16 @@ if submitted:
             st.error("Please fill in all the information", icon="🚨")
         else:
             re= Recommendation(TOGETHER_AI_API)
-            user_info = format_user_info(gender, age, height, weight, medical_history, symptoms, id)
+            user_info = format_user_info(
+                gender=gender,
+                age=age,
+                height=height,
+                weight=weight,
+                medical_history=medical_history,
+                symptoms=symptoms,
+                id=id,
+                budget=budget
+            )
             with st.spinner("analyzing...",show_time=True):
                 start = time.time()
                 result = re.run(user_info)

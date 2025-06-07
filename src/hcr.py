@@ -27,7 +27,8 @@ class Recommendation:
                 search_by_other(),
                 recommend_by_age(),
                 recommend_by_gender(),
-                calculate_bmi()  # 添加新工具
+                calculate_bmi(),
+                filter_by_budget()  # 添加新工具
                 ],
             api_key=api_key
         )

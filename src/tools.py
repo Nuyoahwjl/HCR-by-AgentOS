@@ -149,3 +149,47 @@ class calculate_bmi:
             result = "性别输入有误，请输入'male'或'female'"
 
         return result
+
+class filter_by_budget:
+    def __init__(self):
+        self.prices = {
+            "血常规": 50,
+            "血压监测": 30,
+            "血脂检查": 100,
+            "心电图": 80,
+            "血糖检测": 60,
+            "眼科检查": 120,
+            "超声心动图": 200,
+            "甲状腺功能": 150,
+            "骨密度": 180,
+            "肿瘤标志物": 300
+        }
+
+    def run(self, recommended_items: str, budget: float):
+        """
+        filter_by_budget: 根据用户预算过滤推荐项目
+
+        Args:
+            recommended_items (str): 推荐的项目列表，以逗号分隔
+            budget (float): 用户预算（元）
+        """
+        items = [item.strip() for item in recommended_items.split("、")]
+        total_cost = 0
+        affordable_items = []
+        
+        for item in items:
+            if item in self.prices:
+                if total_cost + self.prices[item] <= budget:
+                    affordable_items.append(item)
+                    total_cost += self.prices[item]
+        
+        if not affordable_items:
+            return "根据您的预算，无法推荐任何项目。建议增加预算或咨询医生选择最必要的检查项目。"
+        
+        result = f"根据您的预算（{budget}元），推荐以下项目（总费用：{total_cost}元）：\n"
+        result += "、".join(affordable_items)
+        
+        if total_cost < budget:
+            result += f"\n\n您的预算还有{budget - total_cost}元剩余，可以考虑增加一些其他检查项目。"
+        
+        return result
