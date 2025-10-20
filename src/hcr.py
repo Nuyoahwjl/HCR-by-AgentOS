@@ -6,14 +6,15 @@ sys.path.insert(0, project_root)
 
 from dotenv import load_dotenv
 load_dotenv(current_dir+"/.env")
-api_key = os.environ.get("TOGETHER_API_KEY")
+# api_key = os.environ.get("TOGETHER_API_KEY")
+api_key = os.environ.get("PIPO_API_KEY")
 
 
 
 from agentos.agent.agent import Agent
 from agentos.memory import TemporaryMemory,Message,Role
 from src.tools import *
-from src.hcr_prompt import HCR_PROMPT,OUTPUT_PROMPT
+from src.prompt import HCR_PROMPT,OUTPUT_PROMPT
 from agentos.utils import call_model
 
 

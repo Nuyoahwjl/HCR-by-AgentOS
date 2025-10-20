@@ -47,8 +47,12 @@ st.markdown("""
 
 
 
-TOGETHER_AI_API = st.text_input("API", type="password" ,help="https://api.together.xyz/")
-if not TOGETHER_AI_API.startswith("tgp"):
+# TOGETHER_AI_API = st.text_input("API", type="password" ,help="https://api.together.xyz/")
+# if not TOGETHER_AI_API.startswith("tgp"):
+#     st.warning("请输入API!", icon="⚠️")
+
+PIPO_API = st.text_input("API", type="password" ,help="https://ppio.com/model-api/console")
+if not PIPO_API.startswith("sk"):
     st.warning("请输入API!", icon="⚠️")
 
 
@@ -74,13 +78,14 @@ submitted = st.button("生成推荐", icon='✔️', use_container_width=True)
 
 
 if submitted:
-    if not TOGETHER_AI_API.startswith("tgp"):
+    # if not TOGETHER_AI_API.startswith("tgp"):
+    if not PIPO_API.startswith("sk"):
         pass
     else:
         if height == 50 or age == 0 or weight == 40 or not medical_history.strip() or not symptoms.strip():
             st.error("请输入完整的个人信息！", icon="🚨")
         else:
-            re= Recommendation(TOGETHER_AI_API)
+            re= Recommendation(PIPO_API)
             user_info = format_user_info(gender, age, height, weight, medical_history, symptoms, id)
             with st.spinner("分析中...",show_time=True):
                 start = time.time()

@@ -137,16 +137,30 @@ from openai import OpenAI
 #     return completion.choices[0].message.content 
  
 from together import Together
+from openai import OpenAI
 
 def call_model(messages, api_key: str | None = None):
 
-    client = Together(
+    # client = Together(
+    #     api_key=api_key,
+    #     base_url="https://api.together.xyz/v1",
+    # )
+
+    # completion = client.chat.completions.create(
+    # model="deepseek-ai/DeepSeek-V3",
+    # messages=messages,
+    # )
+
+    # return completion.choices[0].message.content 
+
+
+    client = OpenAI(
         api_key=api_key,
-        base_url="https://api.together.xyz/v1",
+        base_url="https://api.ppinfra.com/openai",
     )
 
     completion = client.chat.completions.create(
-    model="deepseek-ai/DeepSeek-V3",
+    model="deepseek/deepseek-v3.1",
     messages=messages,
     )
 

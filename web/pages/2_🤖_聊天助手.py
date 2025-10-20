@@ -1,5 +1,6 @@
 import streamlit as st
 from together import Together
+from openai import OpenAI
 
 st.set_page_config(
     page_title="聊天助手",
@@ -107,7 +108,7 @@ st.markdown("""
 if "messages" not in st.session_state:
     st.session_state.messages = []
 if "model" not in st.session_state:
-    st.session_state.model = "deepseek-ai/DeepSeek-V3"
+    st.session_state.model = "deepseek/deepseek-v3.1"
 
 
 # 初始化session状态
@@ -128,7 +129,7 @@ with st.sidebar:
     st.header("⚙️ 设置")
     st.session_state.model = st.selectbox(
         "选择模型",
-        ("deepseek-ai/DeepSeek-V3","Qwen/QwQ-32B","google/gemma-2-27b-it"),
+        ("deepseek/deepseek-v3.1","qwen/qwen3-235b-a22b-fp8","zai-org/glm-4.6"),
         index=0,
         key="model_selector"
     )
@@ -149,9 +150,9 @@ st.markdown("""
 
 # 处理流式响应
 def generate_response(messages):
-    client = Together(
+    client = OpenAI(
         api_key=api_key,
-        base_url="https://api.together.xyz/v1",
+        base_url="https://api.ppinfra.com/openai",
     )
     full_response = ""
     message_placeholder = st.empty()
