@@ -2,7 +2,7 @@
 
 
 # 🩺Health Check Recommendation🩺
-This project is a health check recommendation system built using [AgentOS](https://github.com/QinbinLi/AgentOS), and [together.ai(DeepSeek V3)](https://docs.together.ai/docs/serverless-models). It uses RAG technology to recommend health check packages based on user information.
+This project is a health check recommendation system built using our [AgentOS](https://github.com/QinbinLi/AgentOS) framework, and [DeepSeek V3](https://github.com/deepseek-ai/DeepSeek-V3). It uses RAG technology to recommend health check packages based on user information.
 
 
 ### 🗂️Folder Structure🗂️
