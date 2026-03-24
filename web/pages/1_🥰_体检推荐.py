@@ -40,7 +40,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 st.markdown("""
 <div style="text-align: center;">
-    <img src="https://cdn.jsdelivr.net/gh//Nuyoahwjl/Nuyoahwjl/HCR/typing-zh.svg" 
+    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&pause=1000&color=FF4B4B&center=true&vCenter=true&width=800&lines=%E4%BD%A0%E5%A5%BD%F0%9F%91%8B%2C+%E6%AC%A2%E8%BF%8E%E6%9D%A5%E5%88%B0HCR%E4%BD%93%E6%A3%80%E6%8E%A8%E8%8D%90%E7%B3%BB%E7%BB%9F!;%E5%A1%AB%E5%85%A5%E4%BB%A5%E4%B8%8B%E4%B8%AA%E4%BA%BA%E4%BF%A1%E6%81%AF%E4%BB%A5%E8%8E%B7%E5%BE%97%E5%AE%8C%E6%95%B4%E6%8E%A8%E8%8D%90" 
          style="display: block; margin: auto; width: 100%;">
 </div>
 """, unsafe_allow_html=True)
