@@ -112,7 +112,7 @@ class ChromaDB():
         reranker=None
     )->List[BaseData]:
         query_data=self.collection.query(query_texts=query_text,n_results=query_num)
-        
+
         results=[]
         for i in range(len(query_data['metadatas'][0])):
             content=query_data['documents'][0][i]
@@ -121,17 +121,29 @@ class ChromaDB():
 
         if rerank:
             if not reranker:
-                raise("Please input the reranker.")
-            
+                raise ValueError("Please input the reranker.")
+
             passages=[]
             for i in range(len(results)):
                 passages.append(results[i].get_content())
             reranker_res=reranker.rerank(query_text,passages)
 
-            
-            for i in range(len(reranker_res)):
-                id=reranker_res[i]['corpus_id']
-                content=reranker_res[i]['text']
-                results[id].set_content(content)
-            
+            reranked_results = []
+            for item in reranker_res:
+                corpus_id = item['corpus_id']
+                if corpus_id < len(results):
+                    reranked_results.append(results[corpus_id])
+            return reranked_results
+
         return results
+
+    def get_all_documents(self) -> List[str]:
+        """Retrieve all document texts from the collection.
+
+        Used to build BM25 index over the ChromaDB corpus.
+
+        Returns:
+            List of all document content strings.
+        """
+        all_data = self.collection.get()
+        return all_data.get('documents', [])
