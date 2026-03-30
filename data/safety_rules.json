@@ -1,0 +1,48 @@
+{
+  "contraindications": [
+    {
+      "condition": "肾功能不全",
+      "avoid": ["造影", "CT增强", "碘造影"],
+      "severity": "critical",
+      "reason": "肾功能不全患者使用造影剂可能导致急性肾损伤"
+    },
+    {
+      "condition": "心脏起搏器",
+      "avoid": ["MRI", "磁共振"],
+      "severity": "critical",
+      "reason": "心脏起搏器患者禁做MRI检查"
+    },
+    {
+      "condition": "妊娠",
+      "avoid": ["胸片", "CT", "X光"],
+      "severity": "critical",
+      "reason": "孕妇应避免放射性检查"
+    }
+  ],
+  "age_restrictions": [
+    {
+      "min_age": 0, "max_age": 17,
+      "avoid": ["肿瘤标志物", "胃肠镜"],
+      "severity": "warning",
+      "reason": "未成年非常规筛查项"
+    },
+    {
+      "min_age": 0, "max_age": 39,
+      "avoid": ["胃肠镜"],
+      "severity": "warning",
+      "reason": "40岁以下无家族史不建议常规肠镜"
+    }
+  ],
+  "redundancy_rules": [
+    {
+      "items": ["血脂检查", "血脂"],
+      "severity": "info",
+      "reason": "重复的血脂检查项目"
+    },
+    {
+      "items": ["血糖检测", "空腹血糖"],
+      "severity": "info",
+      "reason": "重复的血糖检查项目"
+    }
+  ]
+}

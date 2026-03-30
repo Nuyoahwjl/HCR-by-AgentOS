@@ -1,0 +1,114 @@
+[
+  {
+    "profile": {
+      "id": "000001",
+      "gender": "male",
+      "age": "50",
+      "height": "172",
+      "weight": "80",
+      "medical_history": "高血压",
+      "symptoms": "头晕"
+    },
+    "evidence": ["患者ID:671203,性别:女,年龄(岁):45,既往病史:高血压,体检前的症状:头晕,体检项目:血常规、血压监测、血脂检查"],
+    "critical_items": ["血压监测", "心电图"],
+    "expected_recommendations": ["血压监测", "心电图", "血脂检查", "肾功能"]
+  },
+  {
+    "profile": {
+      "id": "000002",
+      "gender": "female",
+      "age": "35",
+      "height": "160",
+      "weight": "55",
+      "medical_history": "无",
+      "symptoms": "乏力"
+    },
+    "evidence": [],
+    "critical_items": ["血常规"],
+    "expected_recommendations": ["血常规", "尿常规"]
+  },
+  {
+    "profile": {
+      "id": "000003",
+      "gender": "male",
+      "age": "65",
+      "height": "170",
+      "weight": "85",
+      "medical_history": "糖尿病、高血脂",
+      "symptoms": "视力模糊"
+    },
+    "evidence": ["糖尿病+高血脂患者需关注血糖、血脂、肾功能、眼科"],
+    "critical_items": ["血糖检测", "血脂检查", "肾功能", "眼科检查"],
+    "expected_recommendations": ["血糖检测", "血脂检查", "肾功能", "眼科检查", "心电图"]
+  },
+  {
+    "profile": {
+      "id": "000004",
+      "gender": "female",
+      "age": "25",
+      "height": "165",
+      "weight": "52",
+      "medical_history": "无",
+      "symptoms": "无"
+    },
+    "evidence": [],
+    "critical_items": ["血常规"],
+    "expected_recommendations": ["血常规", "尿常规"]
+  },
+  {
+    "profile": {
+      "id": "000005",
+      "gender": "male",
+      "age": "55",
+      "height": "175",
+      "weight": "90",
+      "medical_history": "痛风",
+      "symptoms": "关节痛"
+    },
+    "evidence": ["痛风患者需关注尿酸、肾功能"],
+    "critical_items": ["肾功能"],
+    "expected_recommendations": ["肾功能", "尿常规", "血脂检查"]
+  },
+  {
+    "profile": {
+      "id": "000006",
+      "gender": "female",
+      "age": "58",
+      "height": "158",
+      "weight": "65",
+      "medical_history": "高血压、糖尿病",
+      "symptoms": "胸闷、乏力"
+    },
+    "evidence": ["高血压+糖尿病患者高风险，需全面心血管和代谢评估"],
+    "critical_items": ["血压监测", "血糖检测", "心电图", "血脂检查", "肾功能"],
+    "expected_recommendations": ["血压监测", "血糖检测", "心电图", "血脂检查", "肾功能", "眼科检查"]
+  },
+  {
+    "profile": {
+      "id": "000007",
+      "gender": "male",
+      "age": "72",
+      "height": "168",
+      "weight": "70",
+      "medical_history": "冠心病",
+      "symptoms": "气短、心悸"
+    },
+    "evidence": ["冠心病老年患者需全面心血管评估"],
+    "critical_items": ["心电图", "心脏彩超", "血压监测", "血脂检查"],
+    "expected_recommendations": ["心电图", "心脏彩超", "血压监测", "血脂检查", "肿瘤标志物", "骨密度"]
+  },
+  {
+    "profile": {
+      "id": "000008",
+      "gender": "female",
+      "age": "42",
+      "height": "163",
+      "weight": "58",
+      "medical_history": "甲状腺疾病",
+      "symptoms": "失眠、乏力"
+    },
+    "evidence": ["甲状腺疾病患者需检查甲状腺功能"],
+    "critical_items": ["甲状腺功能"],
+    "expected_recommendations": ["甲状腺功能", "血常规", "肝功能"]
+  }
+]
