@@ -13,9 +13,6 @@ OUTPUT_PROMPT = """\
 3. 注意事项：检查前准备事项\
 """
 
-# print(HCR_PROMPT)
-# print(OUTPUT_PROMPT)
-
 REPORT_PROMPT = """\
 请根据该病人的体检信息，生成一份格式化的体检报告单。格式要整齐，内容要完整。
 <体检信息>
@@ -40,3 +37,10 @@ BMI：0=小于或等于23.9，1=24.0-27.9，2=大于或等于28.0;参考值18.5-
 空腹血糖：0=大于等于7.0mmol/L，1=小于7.0mmol/L;参考值3.9-6.1
 """
 
+# ========== Multi-Agent System Prompts ==========
+# These are defined in their respective agent files but listed here for reference:
+# - SymptomAnalyzer: src/agents/symptom_analyzer.py
+# - RiskAssessor: src/agents/risk_assessor.py
+# - RecommendationAgent: src/agents/recommendation_agent.py
+# - SafetyChecker: src/agents/safety_checker.py
+# - Coordinator synthesis: src/agents/coordinator.py
