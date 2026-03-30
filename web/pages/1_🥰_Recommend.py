@@ -53,18 +53,18 @@ st.markdown("""
 #     api=st.text_input("API", type="password", key="api_key" ,help="https://api.together.xyz/")
 #     submitted = st.button("Confirm", icon='✔️', use_container_width=True)
 #     if submitted:
-#         st.session_state.TOGETHER_AI_API=api
+#         st.session_state.DEEPSEEK_API_KEY=api
 
 # with st.sidebar:
 #     st.header("⚙️ Setting")
 #     st.button("Input API", on_click=input,use_container_width=True)
-#     if "TOGETHER_AI_API" not in st.session_state or not st.session_state.TOGETHER_AI_API.startswith("tgp"):
+#     if "DEEPSEEK_API_KEY" not in st.session_state or not st.session_state.DEEPSEEK_API_KEY.startswith("tgp"):
 #         st.warning("Please enter API!", icon="⚠️")
 
 
-TOGETHER_AI_API = st.text_input("TOGETHER_AI_API", type="password" ,help="https://api.together.xyz/")
-if not TOGETHER_AI_API.startswith("tgp"):
-    st.warning("Please enter API!", icon="⚠️")
+DEEPSEEK_API_KEY = st.text_input("DeepSeek API Key", type="password", help="https://platform.deepseek.com/")
+if not DEEPSEEK_API_KEY.startswith("sk-"):
+    st.warning("Please enter a valid DeepSeek API Key (starts with sk-)!", icon="⚠️")
 
 
 
@@ -89,13 +89,13 @@ submitted = st.button("Recommend", icon='✔️', use_container_width=True)
 
 
 if submitted:
-    if not TOGETHER_AI_API.startswith("tgp"):
+    if not DEEPSEEK_API_KEY.startswith("tgp"):
         pass
     else:
         if height == 50 or age == 0 or weight == 40 or not medical_history.strip() or not symptoms.strip():
             st.error("Please fill in all the information", icon="🚨")
         else:
-            re= Recommendation(TOGETHER_AI_API)
+            re= Recommendation(DEEPSEEK_API_KEY)
             user_info = format_user_info(gender, age, height, weight, medical_history, symptoms, id)
             with st.spinner("analyzing...",show_time=True):
                 start = time.time()
@@ -113,7 +113,7 @@ if submitted:
 # 添加查看历史记录的按钮
 view_history = st.button("View History", icon='📜', use_container_width=True)
 if view_history:
-    re = Recommendation(TOGETHER_AI_API)
+    re = Recommendation(DEEPSEEK_API_KEY)
     history = re.get_history(id)
     if history:
         st.markdown("## History Records")

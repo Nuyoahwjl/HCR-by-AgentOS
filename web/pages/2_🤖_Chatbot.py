@@ -1,5 +1,11 @@
+import sys
+import os
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(os.path.dirname(current_dir))
+sys.path.insert(0, project_root)
+
 import streamlit as st
-from together import Together
+from openai import OpenAI
 
 st.set_page_config(
     page_title="Medical Chatbot",
@@ -107,7 +113,7 @@ st.markdown("""
 if "messages" not in st.session_state:
     st.session_state.messages = []
 if "model" not in st.session_state:
-    st.session_state.model = "deepseek-ai/DeepSeek-V3"
+    st.session_state.model = "deepseek-chat"
 
 
 # 初始化session状态
@@ -128,7 +134,7 @@ with st.sidebar:
     st.header("⚙️ Settings")
     st.session_state.model = st.selectbox(
         "Select Model",
-        ("deepseek-ai/DeepSeek-V3","Qwen/QwQ-32B","google/gemma-2-27b-it"),
+        ("deepseek-chat", "deepseek-reasoner"),
         index=0,
         key="model_selector"
     )
@@ -149,9 +155,9 @@ st.markdown("""
 
 # 处理流式响应
 def generate_response(messages):
-    client = Together(
+    client = OpenAI(
         api_key=api_key,
-        base_url="https://api.together.xyz/v1",
+        base_url="https://api.deepseek.com",
     )
     full_response = ""
     message_placeholder = st.empty()

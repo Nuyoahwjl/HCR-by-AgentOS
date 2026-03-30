@@ -7,7 +7,7 @@ sys.path.insert(0, project_root)
 import streamlit as st
 from src.report import get_health_check_info
 from src.prompt import REPORT_PROMPT
-from together import Together
+from agentos.utils import call_model
 import time
 
 st.set_page_config(
@@ -19,24 +19,12 @@ with st.sidebar:
     st.header("⚙️ Settings")
     st.session_state.model = st.selectbox(
         "Select Model",
-        ("deepseek-ai/DeepSeek-V3","Qwen/QwQ-32B","google/gemma-2-27b-it"),
+        ("deepseek-chat", "deepseek-reasoner"),
         index=0,
         key="model_selector"
     )
     st.session_state.api_key = st.text_input("API Key", type="password")
     st.markdown("---")
-
-def call_model(messages, api_key: str | None = None, model: str = "deepseek-ai/DeepSeek-V3"):
-    client = Together(
-        api_key=api_key,
-        base_url="https://api.together.xyz/v1",
-    )
-    completion = client.chat.completions.create(
-    model=model,
-    messages=messages,
-    )
-    return completion.choices[0].message.content 
-
 
 st.title("Health Check Report")
 st.markdown("### Enter your 8-digit card number to generate the report")
