@@ -1,5 +1,4 @@
 openai==1.59.5
-together==1.5.4
 streamlit==1.44.0
 chromadb==0.6.2
 sentence-transformers==3.3.1

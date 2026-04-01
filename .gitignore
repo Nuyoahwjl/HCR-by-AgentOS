@@ -1,8 +1,7 @@
-# 忽略 .env 文件
 .env
-
-# 忽略所有 __pycache__ 文件夹
 **/__pycache__/
-
-# 忽略所有 __init__.py 文件
 **/__init__.py
+AGENTS.md
+EXECUTE.md
+PLAN.md
+history.db
