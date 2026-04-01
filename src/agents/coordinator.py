@@ -154,6 +154,7 @@ class CoordinatorAgent:
         """
         context = AgentContext()
         context.set_user_info(user_info)
+        self.context = context  # Save for external access
 
         # Phase 1: Evidence gathering via query decomposition + hybrid retrieval
         if retriever:

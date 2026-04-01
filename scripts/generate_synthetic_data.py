@@ -175,6 +175,21 @@ def main():
                         help="Generation method: 'llm' uses API, 'rule' is offline")
     args = parser.parse_args()
 
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # Load .env from project root
+    dotenv_path = os.path.join(project_root, ".env")
+    if not os.path.exists(dotenv_path):
+        # Fallback: check src/.env
+        dotenv_path = os.path.join(project_root, "src", ".env")
+    if os.path.exists(dotenv_path):
+        from dotenv import load_dotenv
+        load_dotenv(dotenv_path)
+
+    api_key = os.environ.get("DEEPSEEK_API_KEY")
+    if not api_key:
+        print("WARNING: DEEPSEEK_API_KEY not set. Create .env in project root or set env var.")
+
+
     if args.method == "llm":
         print(f"Generating {args.num} records via LLM...")
         batch_size = 20
@@ -182,7 +197,7 @@ def main():
         for i in range(0, args.num, batch_size):
             current_batch = min(batch_size, args.num - len(all_records))
             print(f"  Batch {i // batch_size + 1}: generating {current_batch} records...")
-            records = generate_batch(current_batch)
+            records = generate_batch(current_batch, api_key=api_key)
             all_records.extend(records)
             if len(all_records) >= args.num:
                 break

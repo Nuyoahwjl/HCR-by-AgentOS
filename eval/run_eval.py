@@ -41,15 +41,18 @@ def run_evaluation(config: str = "multi_agent", test_cases_path: str = "eval/tes
     # Import the recommendation system
     from src.hcr import Recommendation
 
-    dotenv_path = os.path.join(project_root, "src", ".env")
+    # Load .env from project root
+    dotenv_path = os.path.join(project_root, ".env")
+    if not os.path.exists(dotenv_path):
+        # Fallback: check src/.env
+        dotenv_path = os.path.join(project_root, "src", ".env")
     if os.path.exists(dotenv_path):
         from dotenv import load_dotenv
         load_dotenv(dotenv_path)
 
-    import os as os_mod
-    api_key = os_mod.environ.get("DEEPSEEK_API_KEY")
+    api_key = os.environ.get("DEEPSEEK_API_KEY")
     if not api_key:
-        print("WARNING: DEEPSEEK_API_KEY not set. Evaluation will fail on API calls.")
+        print("WARNING: DEEPSEEK_API_KEY not set. Create .env in project root or set env var.")
 
     rec_system = Recommendation(api_key=api_key, use_multi_agent=(config == "multi_agent"))
 

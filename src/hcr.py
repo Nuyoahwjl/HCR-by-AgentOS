@@ -8,7 +8,10 @@ sys.path.insert(0, project_root)
 
 # 加载环境变量
 from dotenv import load_dotenv
-load_dotenv(current_dir + "/.env")
+env_path = os.path.join(project_root, ".env")
+if not os.path.exists(env_path):
+    env_path = os.path.join(current_dir, ".env")
+load_dotenv(env_path)
 api_key = os.environ.get("DEEPSEEK_API_KEY")
 
 # 导入所需模块
@@ -113,6 +116,18 @@ class Recommendation:
         print("RESPONSE")
         print("=" * 60)
         print(response)
+
+        # # Print multi-agent conversation history
+        # ctx = self.coordinator.context
+        # print("\n" + "=" * 60)
+        # print("CONVERSATION HISTORY")
+        # print("=" * 60)
+        # for msg in ctx.messages:
+        #     print(f"[{msg.sender} -> {msg.receiver}] ({msg.message_type}, confidence={msg.confidence:.2f})")
+        #     print(f"{msg.content[:500]}{'...' if len(msg.content) > 500 else ''}")
+        #     if msg.evidence:
+        #         print(f"  Evidence: {msg.evidence[:3]}")
+        #     print("------------")
 
         # Save history
         self.save_history(user_info, response, mode="multi_agent")
