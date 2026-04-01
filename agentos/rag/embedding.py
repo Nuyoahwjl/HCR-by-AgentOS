@@ -31,6 +31,14 @@ class EmbeddingModel:
     def __call__(self, input: Documents) -> Embeddings:
         return  [self.embedding_model.encode(text) for text in input]
 
+    def embed_query(self, input: str) -> List[float]:
+        """Required by ChromaDB for query embedding."""
+        return self.embedding_model.encode(input).tolist()
+
+    def embed_documents(self, input: Documents) -> Embeddings:
+        """Required by ChromaDB for document embedding."""
+        return [self.embedding_model.encode(text).tolist() for text in input]
+
     def encode(
         self,
         data:List[BaseData]
