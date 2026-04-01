@@ -1,0 +1,68 @@
+{
+  "A_baseline": {
+    "description": "Baseline: single agent + pure vector search",
+    "metrics": {
+      "Accuracy": 0.0,
+      "Coverage": 0.0,
+      "Diversity": 0.0,
+      "Precision": 0.0,
+      "avg_latency": 36.43
+    },
+    "num_cases_evaluated": 5
+  },
+  "B_hybrid_rag": {
+    "description": "Baseline + Hybrid RAG (BM25+dense+reranker)",
+    "metrics": {
+      "Accuracy": 0.0,
+      "Coverage": 0.0,
+      "Diversity": 0.0,
+      "Precision": 0.0,
+      "avg_latency": 40.54
+    },
+    "num_cases_evaluated": 5
+  },
+  "C_multi_agent": {
+    "description": "Baseline + Multi-Agent architecture",
+    "metrics": {
+      "Accuracy": 0.08857142857142856,
+      "Coverage": 0.08857142857142856,
+      "Diversity": 0.12000000000000002,
+      "Precision": 0.008282817289728102,
+      "avg_latency": 140.26
+    },
+    "num_cases_evaluated": 5
+  },
+  "D_query_decomp": {
+    "description": "Hybrid RAG + Query Decomposition + Ontology",
+    "metrics": {
+      "Accuracy": 0.0,
+      "Coverage": 0.0,
+      "Diversity": 0.0,
+      "Precision": 0.0,
+      "avg_latency": 47.69
+    },
+    "num_cases_evaluated": 5
+  },
+  "E_reflection": {
+    "description": "Multi-Agent + Self-reflection loop (max 2 rounds)",
+    "metrics": {
+      "Accuracy": 0.02222222222222222,
+      "Coverage": 0.02222222222222222,
+      "Diversity": 0.08,
+      "Precision": 0.0017391304347826088,
+      "avg_latency": 143.2
+    },
+    "num_cases_evaluated": 5
+  },
+  "F_full_system": {
+    "description": "Full System: all components combined",
+    "metrics": {
+      "Accuracy": 0.02,
+      "Coverage": 0.02,
+      "Diversity": 0.04,
+      "Precision": 0.0020833333333333333,
+      "avg_latency": 140.03
+    },
+    "num_cases_evaluated": 5
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "recommendation": {
+    "Accuracy": 0.06347680097680097,
+    "Coverage": 0.06347680097680097,
+    "Diversity": 0.15000000000000002,
+    "Precision": 0.006243123601545432
+  },
+  "safety": {
+    "Hallucination_Rate": 0.9094021048695854,
+    "Omission_Rate": 0.96875
+  },
+  "performance": {
+    "latency_seconds": 137.14749920368195
+  }
+}
