@@ -2,13 +2,11 @@ openai==1.59.5
 streamlit==1.44.0
 chromadb==0.6.2
 sentence-transformers==3.3.1
-torch==2.5.1
+torch>=2.5,<2.12
 transformers==4.47.1
 numpy==2.0.2
 scikit-learn==1.6.0
 scipy==1.13.1
-huggingface-hub==0.27.1
-tokenizers==0.21.0
 pandas==2.2.3
 requests==2.32.3
 pypdf==5.1.0
