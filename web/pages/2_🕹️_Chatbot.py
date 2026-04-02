@@ -9,7 +9,7 @@ from openai import OpenAI
 
 st.set_page_config(
     page_title="Medical Chatbot",
-    page_icon="🤖",
+    page_icon="🕹️",
 )
 
 
@@ -145,7 +145,7 @@ with st.sidebar:
 
 
 # 主界面
-st.title("🤖 AI Medical Assistant")
+st.title("🕹️ AI Medical Assistant")
 st.markdown("""
     <div class="centered-notice">
     The information provided by this assistant is for reference only and cannot replace professional medical advice. In case of emergency, please contact healthcare professionals immediately.
