@@ -28,6 +28,10 @@ class EmbeddingModel:
             model_name, cache_folder=cache_dir,**kwargs
         )
     
+    def name(self) -> str:
+        """Required by ChromaDB for embedding function identification."""
+        return f"custom-{self.model_name}"
+
     def __call__(self, input: Documents) -> Embeddings:
         return  [self.embedding_model.encode(text) for text in input]
 
