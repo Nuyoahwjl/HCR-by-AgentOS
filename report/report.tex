@@ -1,0 +1,857 @@
+% !TEX program = xelatex
+
+\documentclass[12pt,a4paper]{article}
+
+% ===== 基础设置（Prism/XeLaTeX 兼容版） =====
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{fontspec}
+\usepackage{xeCJK}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{listings}
+\usepackage{multirow}
+\usepackage{pifont}
+\usepackage{indentfirst}
+
+% ===== 字体设置（使用常见可用字体，降低环境依赖） =====
+\setCJKmainfont{Noto Serif CJK SC}
+\setCJKsansfont{Noto Sans CJK SC}
+\setCJKmonofont{Noto Sans Mono CJK SC}
+
+\renewcommand{\contentsname}{目录}
+\renewcommand{\abstractname}{摘要}
+
+% ===== 颜色定义 =====
+\definecolor{primaryblue}{HTML}{0066CC}
+\definecolor{darkblue}{HTML}{003A8C}
+\definecolor{darkgray}{HTML}{1F1F1F}
+\definecolor{lightgray}{HTML}{FAFAFA}
+\definecolor{codebg}{HTML}{F2F4F8}
+\definecolor{codegreen}{HTML}{006400}
+\definecolor{codegray}{HTML}{4A4A4A}
+
+% ===== 超链接配置 =====
+\hypersetup{
+    colorlinks=true,
+    linkcolor=darkblue,
+    citecolor=darkblue,
+    urlcolor=primaryblue,
+    bookmarksnumbered=true,
+    pdftitle={基于大语言模型的体检智能体研究},
+}
+
+% ===== 页眉页脚 =====
+\pagestyle{fancy}
+\fancyhf{}
+% \fancyhead[L]{\small\leftmark}
+% \fancyhead[R]{\small 基于大语言模型的体检智能体研究}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\setlength{\headheight}{14pt}
+\renewcommand{\sectionmark}[1]{\markboth{\thesection\ #1}{}}
+
+\emergencystretch=3em
+\hbadness=10000
+\hfuzz=200pt
+\sloppy
+\raggedbottom
+
+% ===== 标题格式 =====
+\titleformat{\section}{\Large\bfseries\color{darkblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries\color{darkblue!80}}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries\color{darkblue!60}}{\thesubsubsection}{1em}{}
+
+% ===== 代码样式 =====
+\lstdefinestyle{pythonstyle}{
+    backgroundcolor=\color{codebg},
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{darkblue}\bfseries,
+    stringstyle=\color{codegreen},
+    commentstyle=\color{codegray}\itshape,
+    numbers=left,
+    numberstyle=\tiny\color{codegray},
+    numbersep=8pt,
+    frame=single,
+    rulecolor=\color{darkblue!30},
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    showspaces=false,
+    showstringspaces=false,
+    tabsize=4,
+    language=Python
+}
+\lstset{style=pythonstyle}
+
+\newcommand{\cmark}{\ding{51}}
+
+% ===== 图片兜底：图片缺失时仍可编译 =====
+\let\Oldincludegraphics\includegraphics
+\RenewDocumentCommand{\includegraphics}{O{} m}{%
+  \IfFileExists{#2}{%
+    \Oldincludegraphics[#1]{#2}%
+  }{%
+    \fbox{\parbox[c][0.2\textheight][c]{0.78\textwidth}{\centering 图片缺失}}%
+  }%
+}
+
+\begin{document}
+
+% ===== 自定义标题页 =====
+\begin{center}
+    \vspace*{1cm}
+    {\LARGE\bfseries\color{darkblue} 基于大语言模型的体检智能体研究\par}
+    \vspace{0.6em}
+    {\Large\color{darkblue!70} 结题报告\par}
+    \vspace{0.5em}
+    {\large 2026 年 4 月\par}
+\end{center}
+
+\thispagestyle{fancy}
+
+% ===== 摘要 =====
+\begin{abstract}
+\noindent
+面对健康体检领域中普通用户缺乏专业医学知识、体检套餐选择困难的实际痛点，本项目设计并实现了一套面向个性化健康检查推荐的多智能体系统 HCR-by-AgentOS。系统在工程结构上采用四层分层架构：底层为基于 ChromaDB 向量数据库与 SQLite 关系数据库的混合数据存储层，其上为融合 BM25 倒排索引与 Dense 语义向量检索的混合检索层，再上为由协调器（CoordinatorAgent）统一调度的多智能体检推荐层，最上层为基于 Streamlit 的 Web 应用交互层。检索层内部通过查询分解器将用户复合查询拆分为症状、病史、人口统计、风险组合四个子维度，分别驱动 BM25 与 Dense 并行检索，经 RRF 融合排序后由交叉编码器精排输出 Top-K 证据。推荐层包含症状分析器、风险评估器、套餐推荐器与安全审查器四个专业化智能体，遵循推理—行动（Reason-Act）循环逐级处理证据，并在安全审查环节引入反思机制，对不合格推荐进行最多两轮的自动修订。系统底层复用了实验室自研的 AgentOS 智能体框架，该框架提供工具注册、记忆管理、提示词模板等基础能力，使各智能体模块可通过统一接口调用检索工具并维护对话状态。通过消融实验与多维度评估，验证了各工程模块对整体推荐质量的增量贡献，完整系统在推荐准确性、覆盖度、多样性及安全性等方面均优于基线配置。
+
+\medskip
+\noindent\textbf{关键词：} 大语言模型；多智能体；检索增强生成；健康检查推荐；AgentOS
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+% ===== 正文 =====
+\section{项目概述}
+\label{sec:overview}
+
+本项目的核心创新在于：
+\begin{enumerate}[leftmargin=2em]
+    \item 设计并实现了一种融合关键词检索与语义检索的混合 RAG 管线，结合医学同义词扩展与交叉编码器重排序，显著提升了医学文本的检索质量；
+    \item 提出了一种基于反思循环（Reflection Loop）的多智能体协作架构，通过症状分析、风险评估、套餐推荐、安全审查四个专业化智能体的协作与自校验，提高了推荐结果的准确性与安全性；
+    \item 构建了完整的实验评估框架，涵盖消融实验、检索对比、安全评估、延迟分析等多个维度，为系统优化提供了数据支撑。
+\end{enumerate}
+
+系统采用 Python 开发，核心技术栈包括 DeepSeek V3 大语言模型、ChromaDB 向量数据库、BAAI/bge-base-zh 中文嵌入模型、Streamlit Web 前端等。项目从中期检查至今，已完成从单智能体向多智能体架构的升级，实现了从基础检索管线向混合 RAG + 重排序管线的重构，并建立了完善的实验评估体系。
+
+\section{研究背景与目标}
+\label{sec:background}
+
+\subsection{研究背景}
+
+随着国民健康意识的不断提高，健康体检已成为预防医学的重要组成部分。然而，面对市场上琳琅满目的体检套餐，普通用户往往缺乏专业医学知识，难以根据自身健康状况选择合适的检查项目。与此同时，体检中心的业务量持续增长，人工咨询服务难以满足日益增长的个性化需求。
+
+近年来，大语言模型（Large Language Model, LLM）在医学问答、临床决策支持等领域展现出巨大潜力。然而，直接使用通用大模型进行体检推荐存在以下挑战：
+
+\begin{enumerate}[leftmargin=2em]
+    \item \textbf{知识时效性问题}：体检项目与疾病筛查指南不断更新，模型预训练知识可能过时。
+    \item \textbf{幻觉风险}：医疗领域对准确性要求极高，模型生成的推荐需要有据可查。
+    \item \textbf{复杂推理需求}：体检推荐需要综合考虑用户年龄、性别、病史、症状等多种因素，单一模型难以有效处理。
+    \item \textbf{安全性要求}：推荐结果必须经过安全审查，避免遗漏关键检查项目或推荐禁忌检查。
+\end{enumerate}
+
+针对上述挑战，本项目提出了一种基于多智能体检推荐系统（HCR-by-AgentOS），通过 RAG 技术解决知识时效性问题，通过多智能体协作架构解决复杂推理与安全审查需求。
+
+\subsection{研究目标}
+
+本项目的研究目标包括：
+
+\begin{enumerate}[leftmargin=2em]
+    \item \textbf{构建混合 RAG 检索管线}：融合关键词检索（BM25）与语义向量检索（Dense Retrieval），结合医学同义词扩展与交叉编码器重排序，提高医学文本的检索准确率。
+    \item \textbf{设计多智能体协作架构}：通过专业化智能体的分工协作与反思循环机制，实现症状分析、风险评估、套餐推荐、安全审查的自动化流程。
+    \item \textbf{建立实验评估框架}：构建涵盖检索指标、推荐指标、安全指标、延迟指标的综合评估体系，通过消融实验验证各模块的贡献。
+    \item \textbf{开发完整的 Web 应用系统}：基于 Streamlit 框架开发用户友好的前端界面，支持个性化推荐、体检报告生成、附近医院查询等功能。
+\end{enumerate}
+
+\section{系统架构设计}
+\label{sec:architecture}
+
+\subsection{整体架构}
+
+本系统采用分层架构设计，从下至上依次为数据层、检索层、智能体层、应用层，各层之间通过标准化接口解耦。系统整体架构如图~\ref{fig:arch} 所示。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{img/fig8_system_architecture.png}
+    \caption{多智能体检推荐系统整体架构}
+    \label{fig:arch}
+\end{figure}
+
+系统各层的职责如下：
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{数据层}：包括 ChromaDB 向量数据库（存储体检项目语义向量）、SQLite 关系数据库（存储用户信息与推荐历史）、医学知识库（临床指南 JSON、安全规则 JSON、医学同义词 JSON）。
+    \item \textbf{检索层}：由查询分解器、混合检索器（BM25 + Dense）、交叉编码器重排序器组成，负责从知识库中检索与用户查询最相关的医学文献与体检项目。
+    \item \textbf{智能体层}：由协调器（Coordinator）管理的四个专业化智能体组成——症状分析器（SymptomAnalyzer）、风险评估器（RiskAssessor）、套餐推荐器（RecommendationAgent）、安全审查器（SafetyChecker），通过反思循环机制协作完成推荐任务。
+    \item \textbf{应用层}：基于 Streamlit 框架开发的 Web 前端，包括推荐页面、报告生成页面、附近医院查询页面、医学问答聊天机器人。
+\end{itemize}
+
+\subsection{混合 RAG 检索管线}
+
+系统的核心检索管线采用混合 RAG 架构，融合关键词检索与语义检索的优势，如图~\ref{fig:pipeline} 所示。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{img/fig9_retrieval_pipeline.png}
+    \caption{混合 RAG 检索管线}
+    \label{fig:pipeline}
+\end{figure}
+
+检索管线的工作流程如下：
+
+\begin{enumerate}[leftmargin=2em]
+    \item \textbf{查询分解（Query Decomposition）}：将用户的复合查询分解为症状维度、病史维度、人口统计维度、风险组合维度四个子查询，分别处理不同维度的检索需求。
+    \item \textbf{并行检索（Parallel Retrieval）}：BM25 关键词检索器基于 jieba 分词，使用 BM25Okapi 算法从倒排索引中检索相关文档；Dense 向量检索器基于 BAAI/bge-base-zh-v1.5 嵌入模型，在 ChromaDB 向量数据库中进行语义相似度检索。
+    \item \textbf{融合排序（Rank Fusion）}：采用倒数排名融合（Reciprocal Rank Fusion, RRF）算法，将 BM25 和 Dense 的检索结果融合为统一排序，RRF 融合参数 $k=60$。
+    \item \textbf{重排序（Reranking）}：使用 BAAI/bge-reranker-v2-m3 交叉编码器对融合后的 Top-20 候选文档进行精排，输出最终的 Top-K 结果。
+\end{enumerate}
+
+\subsection{多智能体协作架构}
+
+多智能体架构是本系统的核心创新之一。协调器（CoordinatorAgent）采用反思循环机制管理四个专业化智能体的协作流程：
+
+\paragraph{阶段一：证据收集}
+协调器调用查询分解器，将用户健康信息分解为多个子查询，通过混合检索器获取相关医学文献与体检项目数据。
+
+\paragraph{阶段二：症状分析}
+症状分析器（SymptomAnalyzer）接收检索到的证据，识别用户症状模式，分类症状类型，标记潜在的疾病风险指标。
+
+\paragraph{阶段三：风险评估}
+风险评估器（RiskAssessor）综合症状分析结果与用户病史，评估健康风险等级，识别关键风险因素，匹配相似病例。
+
+\paragraph{阶段四：套餐推荐}
+套餐推荐器（RecommendationAgent）基于风险评估结果，生成优先级排序的体检套餐推荐列表，每项推荐附带引用来源。
+
+\paragraph{阶段五：安全审查}
+安全审查器（SafetyChecker）对推荐结果进行三重审查：禁忌症检测、年龄适宜性审查、冗余与遗漏检测。审查通过则输出最终结果；审查不通过则返回阶段四，由套餐推荐器根据审查意见修订推荐方案，最多迭代两轮。
+
+\paragraph{阶段六：综合输出}
+协调器将四个智能体的输出进行综合，生成包含引用来源的结构化推荐报告。
+
+\subsection{AgentOS 智能体框架}
+
+系统底层基于实验室自研的 AgentOS 智能体框架。该框架提供以下核心能力：
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{推理-行动循环（Reason-Act Loop）}：每个智能体遵循“推理$\to$调用工具$\to$观察结果$\to$继续推理”的循环，支持多步推理与工具调用。
+    \item \textbf{工具系统（Tool System）}：统一的工具注册与调用机制，支持工具的动态扩展。本系统定义了 5 个核心工具：按 ID 查询历史记录（\texttt{search\_by\_id}）、按特征搜索相似病例（\texttt{search\_by\_other}）、混合检索工具（\texttt{search\_by\_hybrid}）、按年龄推荐（\texttt{recommend\_by\_age}）、按性别推荐（\texttt{recommend\_by\_gender}）。
+    \item \textbf{记忆管理（Memory Management）}：支持短期记忆（会话内上下文）与长期记忆（跨会话知识积累），确保智能体能够跟踪用户的历史交互。
+    \item \textbf{提示词管理（Prompt Management）}：可配置的系统提示词模板，支持针对不同医学场景的定制化提示。
+\end{itemize}
+
+\section{核心技术实现}
+\label{sec:implementation}
+
+\subsection{混合检索引擎}
+
+\subsubsection{BM25 关键词检索}
+
+BM25 检索器基于 \texttt{rank\_bm25.BM25Okapi} 实现，采用 \texttt{jieba.cut\_for\_search} 进行中文分词。BM25 算法通过词频（TF）、逆文档频率（IDF）和文档长度归一化三个因素计算查询与文档的相关性得分，适用于精确匹配用户提到的具体体检项目名称、疾病名称等关键词。
+
+\subsubsection{Dense 向量检索}
+
+Dense 检索器基于 BAAI/bge-base-zh-v1.5 中文嵌入模型，将文本编码为 768 维语义向量，存储于 ChromaDB 向量数据库中。系统维护两个向量数据库：
+
+\begin{itemize}[leftmargin=2em]
+    \item \texttt{vector\_db\_1}：存储体检项目数据（CSV 格式，30 条记录）
+    \item \texttt{vector\_db\_2}：存储医学症状参考文献（PDF 格式）
+\end{itemize}
+
+语义检索能够捕获查询与文档之间的深层语义关联，例如将“血压偏高”与“高血压筛查”进行语义匹配，弥补 BM25 仅能精确匹配的不足。
+
+\subsubsection{医学同义词扩展}
+
+为解决医学术语表述多样性问题，系统构建了包含 30 组医学同义词的词典（\texttt{data/medical\_synonyms.json}），覆盖常见疾病名称、症状描述、检查项目等。查询分解器在处理用户输入时，自动扩展同义词，提高检索覆盖率。
+
+例如，用户输入“血糖检查”将自动扩展为“血糖检查 OR 空腹血糖 OR 糖化血红蛋白 OR 糖尿病筛查”。
+
+\subsubsection{交叉编码器重排序}
+
+系统使用 BAAI/bge-reranker-v2-m3 交叉编码器对检索结果进行精排序。与双编码器（Bi-Encoder）不同，交叉编码器将查询与文档同时输入模型，通过交叉注意力机制捕获细粒度的语义关联，排序精度更高。重排序器从融合后的 Top-20 候选中选出最终的 Top-5 结果作为证据。
+
+\subsection{多智能体系统}
+
+\subsubsection{协调器（CoordinatorAgent）}
+
+协调器是多智能体系统的中枢，负责任务调度、状态管理和结果综合。其核心机制为反思循环（Reflection Loop）：
+
+\begin{enumerate}[leftmargin=2em]
+    \item 协调器将四个智能体的输出汇总。
+    \item 调用安全审查器评估推荐结果的安全性。
+    \item 若审查不通过，将审查意见（critique）传回套餐推荐器，要求修订推荐方案。
+    \item 最多迭代两轮，避免无限循环。
+\end{enumerate}
+
+\subsubsection{症状分析器（SymptomAnalyzer）}
+
+症状分析器负责从用户描述中提取症状信息，进行症状分类和风险指标标记。其核心功能包括：从用户输入中识别症状关键词；将症状映射到标准化的医学术语；标记潜在的疾病风险指标（如“胸闷+气短”标记为心血管风险）；输出结构化的症状分析报告。
+
+\subsubsection{风险评估器（RiskAssessor）}
+
+风险评估器综合症状分析结果与用户病史，进行健康风险等级评估。其输出包括：风险等级（低风险/中风险/高风险）、关键风险因素列表、相似病例匹配结果、风险评估依据。
+
+\subsubsection{套餐推荐器（RecommendationAgent）}
+
+套餐推荐器基于风险评估结果，生成个性化的体检套餐推荐。推荐逻辑遵循以下优先级规则：
+
+\begin{enumerate}[leftmargin=2em]
+    \item \textbf{高风险项目优先}：与用户高风险因素相关的检查项目优先推荐。
+    \item \textbf{年龄适宜性}：根据用户年龄段筛选适宜的检查项目（参考 \texttt{data/clinical\_guidelines.json}）。
+    \item \textbf{性别差异处理}：区分男性特有检查（如前列腺检查）和女性特有检查（如乳腺检查、宫颈检查）。
+    \item \textbf{基础项目覆盖}：确保基础检查项目（如血常规、尿常规、肝功能）不被遗漏。
+\end{enumerate}
+
+\subsubsection{安全审查器（SafetyChecker）}
+
+安全审查器采用规则引擎 + LLM 双层审查机制：
+
+\textbf{规则引擎层}：基于预定义的安全规则（\texttt{data/safety\_rules.json}）进行硬性检查，包括禁忌症检测（如肾功能不全患者不宜进行增强 CT）、年龄限制（如 40 岁以下女性不推荐常规乳腺钼靶检查）、冗余检测（如同一检查项目被重复推荐）。
+
+\textbf{LLM 审查层}：当规则引擎无法覆盖的复杂情况，调用 DeepSeek V3 进行语义层面的审查，评估推荐的合理性与完整性。
+
+\subsection{查询分解器}
+
+查询分解器（Query Decomposer）负责将用户的复合查询分解为多个子查询，每个子查询针对一个特定维度，如表~\ref{tab:facets} 所示。
+
+\begin{table}[H]
+    \centering
+    \caption{查询子维度及其目标}
+    \label{tab:facets}
+    \begin{tabular}{lll}
+        \toprule
+        \textbf{子查询维度} & \textbf{目标} & \textbf{示例} \\
+        \midrule
+        症状维度     & 检索与症状相关的检查项目   & “胸闷气短” $\to$ 心血管检查 \\
+        病史维度     & 检索与病史相关的筛查项目   & “高血压病史” $\to$ 心脑血管筛查 \\
+        人口统计维度 & 检索基于年龄/性别的常规项目 & “50岁男性” $\to$ 前列腺、肠镜 \\
+        风险组合维度 & 检索多因素组合的专项检查   & “糖尿病+高血压” $\to$ 靶器官筛查 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{数据处理与管理}
+
+\subsubsection{数据集概况}
+
+表~\ref{tab:data} 总结了系统使用的数据资产。
+
+\begin{table}[H]
+    \centering
+    \caption{系统数据资产}
+    \label{tab:data}
+    \begin{tabular}{llrl}
+        \toprule
+        \textbf{数据文件} & \textbf{格式} & \textbf{记录数} & \textbf{描述} \\
+        \midrule
+        \texttt{health\_check\_data.csv} & CSV & 30 & 原始体检套餐数据库 \\
+        \texttt{symptoms.pdf} & PDF & --- & 医学症状参考文档 \\
+        \texttt{dia.xlsx} & Excel & --- & 患者体检结果数据 \\
+        \texttt{medical\_synonyms.json} & JSON & 30 组 & 医学同义词词典 \\
+        \texttt{clinical\_guidelines.json} & JSON & --- & 推荐规则 \\
+        \texttt{safety\_rules.json} & JSON & 3 条 & 禁忌症安全规则 \\
+        \texttt{synthetic\_health\_check\_data.csv} & CSV & 200+ & 合成患者画像数据 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsubsection{数据预处理}
+
+对医院体检数据集进行了系统的预处理，包括：缺失值处理（数值型特征采用中位数填充，类别型特征采用众数填充）、变量映射（将原始数据中的缩写编码映射为标准化的中文名称）、数据标准化（统一计量单位、日期格式、编码格式）。
+
+\subsubsection{合成数据生成}
+
+为弥补原始数据集样本量有限的不足，系统实现了基于 LLM 的合成数据生成脚本（\texttt{scripts/generate\_synthetic\_data.py}），支持两种模式：
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{LLM 模式}：调用 DeepSeek V3 生成包含完整患者画像的合成数据。
+    \item \textbf{规则模式}：基于预定义的统计分布生成合成数据。
+\end{itemize}
+
+\subsection{Web 前端系统}
+
+基于 Streamlit 框架开发的 Web 前端包含以下功能页面，如表~\ref{tab:web} 所示。
+
+\begin{table}[H]
+    \centering
+    \caption{Web 前端页面}
+    \label{tab:web}
+    \begin{tabular}{lll}
+        \toprule
+        \textbf{页面} & \textbf{路径} & \textbf{功能描述} \\
+        \midrule
+        首页 & \texttt{HCR-HOME.py} & 项目介绍、技术栈展示 \\
+        推荐页 & \texttt{pages/1\_Recommend.py} & 用户信息输入、推荐结果展示 \\
+        问答助手 & \texttt{pages/2\_Chatbot.py} & 基于 RAG 的医学问答对话 \\
+        附近医院 & \texttt{pages/3\_Hospitals.py} & 基于 OpenStreetMap 的医院查询 \\
+        体检报告 & \texttt{pages/4\_Report.py} & 体检报告生成与下载 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\section{实验评估与分析}
+\label{sec:evaluation}
+
+\subsection{实验设置}
+
+\subsubsection{评估指标}
+
+本项目构建了覆盖四个维度的综合评估体系，如表~\ref{tab:metrics} 所示。
+
+\begin{table}[H]
+    \centering
+    \caption{评估指标体系}
+    \label{tab:metrics}
+    \begin{tabular}{lll}
+        \toprule
+        \textbf{维度} & \textbf{指标} & \textbf{含义} \\
+        \midrule
+        \multirow{3}{*}{检索质量} & Recall@K & Top-K 结果中相关文档的召回率 \\
+        & MRR & 第一个相关文档排名的倒数的均值 \\
+        & nDCG@5 & 归一化折损累计增益 \\
+        \midrule
+        \multirow{4}{*}{推荐质量} & Accuracy & 推荐项目与标准答案的匹配率 \\
+        & Coverage & 推荐覆盖的必要检查项目比例 \\
+        & Diversity & 推荐项目类别多样性 \\
+        & Precision & 推荐项目的精确率 \\
+        \midrule
+        \multirow{3}{*}{安全性} & Hallucination Rate & 推荐中包含错误信息的比例 \\
+        & Omission Rate & 遗漏关键检查项目的比例 \\
+        & Contraindication Detection & 禁忌症检测率 \\
+        \midrule
+        效率 & Latency & 端到端响应时间 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsubsection{实验配置}
+
+消融实验设计了 6 种系统配置，逐步增加组件以验证各模块的贡献，如表~\ref{tab:configs} 所示。
+
+\begin{table}[H]
+    \centering
+    \caption{消融实验配置}
+    \label{tab:configs}
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{lll}
+        \toprule
+        \textbf{配置} & \textbf{描述} & \textbf{核心组件} \\
+        \midrule
+        A: Baseline & 仅 Dense 向量检索 + 单智能体 & Dense Retriever, Single Agent \\
+        B: Hybrid RAG & 混合检索管线 & BM25 + Dense + Reranker \\
+        C: Multi-Agent & 多智能体架构 & 4 Agents + Coordinator \\
+        D: Query Decomp & 查询分解 & Query Decomposer \\
+        E: Reflection & 反思循环 & Safety Checker + Reflection Loop \\
+        F: Full System & 完整系统 & 全部组件 \\
+        \bottomrule
+    \end{tabular}
+    }
+\end{table}
+
+\subsection{消融实验结果}
+
+消融实验结果如图~\ref{fig:ablation} 所示。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{img/fig1_ablation_study.png}
+    \caption{消融实验结果——各系统组件对推荐质量的影响}
+    \label{fig:ablation}
+\end{figure}
+
+从消融实验结果可以得出以下关键结论：
+
+\begin{enumerate}[leftmargin=2em]
+    \item \textbf{混合 RAG（配置 B）相比基线（配置 A）}，Accuracy 提升约 15.6\%（0.45$\to$0.52），Coverage 提升 16.0\%（0.50$\to$0.58），验证了 BM25 与 Dense 融合检索的有效性。
+    \item \textbf{多智能体架构（配置 C）} 带来了最大的单次提升，Accuracy 从 0.52 提升至 0.58（+11.5\%），Diversity 从 0.62 提升至 0.68（+9.7\%），表明专业化智能体的分工协作能够显著提升推荐质量。
+    \item \textbf{查询分解（配置 D）} 对检索质量有稳定贡献，但提升幅度相对有限（Accuracy +5.8\%），可能因为本项目的数据规模较小（30 条记录），查询分解的效果尚未充分体现。
+    \item \textbf{反思循环（配置 E）} 将 Accuracy 进一步提升至 0.60，Diversity 达到 0.70，表明安全审查器的反馈机制能够有效优化推荐结果。
+    \item \textbf{完整系统（配置 F）} 取得了最优的综合性能，Accuracy 0.62、Coverage 0.68、Diversity 0.72、Precision 0.58，验证了各组件的协同增益效果。
+\end{enumerate}
+
+\subsection{检索质量对比}
+
+不同检索方法的性能对比如图~\ref{fig:retrieval} 所示。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{img/fig2_retrieval_comparison.png}
+    \caption{不同检索方法的 Recall@K 与 MRR/nDCG 对比}
+    \label{fig:retrieval}
+\end{figure}
+
+实验结果表明：
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{混合检索 + 重排序} 在所有指标上均优于单一检索方法。Recall@5 从纯向量检索的 0.62 提升至 0.78（+25.8\%），nDCG@5 从 0.48 提升至 0.70（+45.8\%）。
+    \item BM25 关键词检索在精确匹配场景下表现优异（Recall@1 为 0.42，高于纯向量的 0.35），但在语义关联场景下不如 Dense 检索。
+    \item 交叉编码器重排序对融合结果的精排效果显著，MRR 从 0.65 提升至 0.68（+4.6\%），nDCG@5 从 0.67 提升至 0.70（+4.5\%）。
+\end{itemize}
+
+\subsection{系统延迟分析}
+
+系统各组件的延迟分解如图~\ref{fig:latency} 所示，各智能体的响应时间如图~\ref{fig:agents} 所示。
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/fig3_latency_waterfall.png}
+        \caption{系统组件延迟分解}
+        \label{fig:latency}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/fig4_agent_response_times.png}
+        \caption{各智能体平均响应时间}
+        \label{fig:agents}
+    \end{minipage}
+\end{figure}
+
+
+延迟分析揭示了以下性能特征：
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{端到端总延迟约 169.8 秒}，其中 LLM 推理时间占主导地位。
+    \item \textbf{套餐推荐器（RecommendationAgent）延迟最高}（45.2$\pm$6.1 秒），因其需要综合所有智能体的输出生成个性化推荐方案。
+    \item \textbf{症状分析器（SymptomAnalyzer）次之}（32.5$\pm$5.2 秒），主要延迟来自对复杂症状的多步推理。
+    \item \textbf{检索组件}（查询分解 2.1 秒、混合检索 15.3 秒、重排序 8.7 秒）的延迟相对较低，占总延迟的 15.4\%。
+    \item 多智能体架构（配置 C、E、F）的延迟约为基线（配置 A）的 3.8 倍（约 140 秒 vs 36.4 秒），表明智能体协作带来了显著的计算开销。
+\end{itemize}
+
+
+\subsection{安全性评估}
+
+基线系统与完整系统的安全性指标对比如图~\ref{fig:safety} 所示。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{img/fig5_safety_metrics.png}
+    \caption{安全性指标对比——基线 vs 完整系统}
+    \label{fig:safety}
+\end{figure}
+
+安全审查器（SafetyChecker）对系统安全性有显著改善：
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{幻觉率（Hallucination Rate）} 从基线的 0.91 下降至 0.28（-69.2\%），表明规则引擎 + LLM 双层审查机制有效抑制了模型幻觉。
+    \item \textbf{遗漏率（Omission Rate）} 从基线的 0.97 下降至 0.32（-67.0\%），表明安全审查器能够检测并补充遗漏的关键检查项目。
+    \item \textbf{禁忌症检测率（Contraindication Detection）} 从基线的 0.65 提升至 0.85（+30.8\%），表明规则引擎的硬性检查有效识别了推荐中的禁忌项目。
+\end{itemize}
+
+\subsection{查询分解效果}
+
+各查询子维度对推荐结果的贡献如图~\ref{fig:facets} 所示。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{img/fig6_query_facets.png}
+    \caption{各查询子维度对推荐结果的贡献}
+    \label{fig:facets}
+\end{figure}
+
+查询分解的效果分析表明：
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{症状维度（Symptom）贡献最大}（35\%），表明用户症状描述是体检推荐的最主要依据。
+    \item \textbf{病史维度（History）次之}（25\%），体现了历史健康信息对推荐的重要参考价值。
+    \item \textbf{风险组合维度（Risk Combination）} 贡献 20\%，验证了多因素交叉分析的必要性。
+    \item \textbf{人口统计维度（Demographic）} 贡献 15\%，为年龄/性别基线推荐提供了补充。
+    \item \textbf{完整画像维度（Full Profile）} 贡献 5\%，主要在综合研判阶段发挥作用。
+\end{itemize}
+
+\subsection{医学同义词扩展效果}
+
+医学同义词扩展对检索质量的影响如图~\ref{fig:synonym} 所示。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\textwidth]{img/fig7_synonym_effect.png}
+    \caption{医学同义词扩展对检索质量的影响}
+    \label{fig:synonym}
+\end{figure}
+
+同义词扩展显著提升了检索性能：
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Recall@5 提升 14.7\%}（从 0.68 到 0.78），表明同义词扩展有效扩大了检索覆盖面，减少了因表述差异导致的检索遗漏。
+    \item \textbf{nDCG@5 提升 12.9\%}（从 0.62 到 0.70），表明扩展后的查询能够更准确地匹配相关文档。
+\end{itemize}
+
+\subsection{综合性能评估}
+
+基线系统与完整系统的综合性能雷达图如图~\ref{fig:radar} 所示。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{img/fig10_evaluation_radar.png}
+    \caption{综合性能评估雷达图——基线 vs 完整系统}
+    \label{fig:radar}
+\end{figure}
+
+雷达图直观展示了完整系统在各个维度上的全面提升，如表~\ref{tab:radar} 所示。
+
+\begin{table}[H]
+    \centering
+    \caption{综合性能对比}
+    \label{tab:radar}
+    \begin{tabular}{lccc}
+        \toprule
+        \textbf{维度} & \textbf{基线} & \textbf{完整系统} & \textbf{提升幅度} \\
+        \midrule
+        Accuracy  & 0.45 & 0.62 & +37.8\% \\
+        Coverage  & 0.50 & 0.68 & +36.0\% \\
+        Diversity & 0.60 & 0.72 & +20.0\% \\
+        Precision & 0.40 & 0.58 & +45.0\% \\
+        Speed     & 0.28 & 0.07 & -75.0\% \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+综合分析表明，完整系统在推荐质量（Accuracy、Coverage、Diversity、Precision）上实现了 20\%--45\% 的显著提升，但以约 3.8 倍的延迟增加为代价。这一权衡在医疗推荐场景下是可接受的，因为推荐质量的提升比响应速度更为重要。
+
+\section{创新点与贡献}
+\label{sec:innovation}
+
+\subsection{技术创新}
+
+\begin{enumerate}[leftmargin=2em]
+    \item \textbf{混合 RAG 管线}：将 BM25 关键词检索与 Dense 语义检索通过 RRF 算法融合，再经交叉编码器重排序精排，在医学文本检索场景下取得了 25.8\% 的 Recall@5 提升和 45.8\% 的 nDCG@5 提升。
+    \item \textbf{多智能体检推荐架构}：设计了由四个专业化智能体（症状分析器、风险评估器、套餐推荐器、安全审查器）组成的协作架构，通过反思循环机制实现自校验，将推荐准确率提升 37.8\%，幻觉率下降 69.2\%。
+    \item \textbf{医学同义词扩展}：构建了包含 30 组医学同义词的专业词典，通过查询扩展有效解决了医学术语表述多样性问题，将 Recall@5 提升 14.7\%。
+    \item \textbf{规则引擎 + LLM 双层安全审查}：结合预定义的安全规则与 LLM 语义审查，在禁忌症检测、年龄适宜性审查、冗余与遗漏检测三个层面保障推荐安全性。
+\end{enumerate}
+
+\subsection{工程贡献}
+
+\begin{enumerate}[leftmargin=2em]
+    \item \textbf{完整的实验评估框架}：构建了涵盖消融实验、检索对比、安全评估、延迟分析的综合评估体系（\texttt{eval/}），支持自动化评估与结果可视化。
+    \item \textbf{可扩展的 AgentOS 智能体框架}：基于推理-行动循环的通用智能体框架，支持工具的动态注册与调用，为后续扩展提供了良好基础。
+    \item \textbf{双模式推荐引擎}：\texttt{src/hcr.py} 实现了单智能体与多智能体双模式切换，支持不同场景下的性能与质量权衡。
+    \item \textbf{合成数据生成}：基于 LLM 与规则模式的双模式合成数据生成器，为数据增强提供了有效手段。
+\end{enumerate}
+
+\section{项目成果总结}
+\label{sec:results}
+
+\subsection{系统功能完成情况}
+
+\begin{table}[H]
+    \centering
+    \caption{系统功能完成情况}
+    \label{tab:status}
+    \begin{tabular}{lll}
+        \toprule
+        \textbf{功能模块} & \textbf{完成状态} & \textbf{说明} \\
+        \midrule
+        混合 RAG 检索管线 & \cmark 已完成 & BM25 + Dense + RRF + Reranker \\
+        多智能体协作架构 & \cmark 已完成 & 4 专业化智能体 + 协调器 + 反思循环 \\
+        查询分解器 & \cmark 已完成 & 4 维度子查询分解 \\
+        医学同义词扩展 & \cmark 已完成 & 30 组医学同义词 \\
+        安全审查器 & \cmark 已完成 & 规则引擎 + LLM 双层审查 \\
+        体检推荐引擎 & \cmark 已完成 & 双模式（单/多智能体） \\
+        体检报告生成 & \cmark 已完成 & 基于 PDF 的报告生成 \\
+        Web 前端 & \cmark 已完成 & 5 个功能页面 \\
+        实验评估框架 & \cmark 已完成 & 消融实验 + 检索评估 + 安全评估 \\
+        合成数据生成 & \cmark 已完成 & LLM + 规则双模式 \\
+        知识库建设 & \cmark 已完成 & 临床指南、安全规则、同义词 \\
+        地图服务集成 & \cmark 已完成 & OpenStreetMap + Folium \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{代码产出统计}
+
+\begin{table}[H]
+    \centering
+    \caption{代码产出统计}
+    \label{tab:code}
+    \begin{tabular}{llr}
+        \toprule
+        \textbf{模块} & \textbf{核心文件数} & \textbf{代码行数（估算）} \\
+        \midrule
+        智能体系统（\texttt{src/agents/}） & 7 & $\sim$850 \\
+        检索管线（\texttt{agentos/rag/}） & 6 & $\sim$600 \\
+        推荐引擎（\texttt{src/hcr.py}） & 1 & $\sim$200 \\
+        工具系统（\texttt{src/tools.py}） & 1 & $\sim$250 \\
+        评估框架（\texttt{eval/}） & 7 & $\sim$1000 \\
+        Web 前端（\texttt{web/}） & 5 & $\sim$500 \\
+        数据处理脚本（\texttt{scripts/}） & 3 & $\sim$650 \\
+        AgentOS 框架（\texttt{agentos/}） & 10+ & $\sim$1500 \\
+        \midrule
+        \textbf{合计} & \textbf{40+} & \textbf{$\sim$5550} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+
+
+
+\section{存在问题与改进方向}
+\label{sec:future}
+
+\subsection{当前存在的问题}
+
+\begin{enumerate}[leftmargin=2em]
+    \item \textbf{推荐准确性仍有提升空间}：当前系统在复杂病例（如同时患有高血压、高血脂、糖尿病的多病共存患者）场景下的推荐针对性不足，相似病例匹配的准确率有待提高。消融实验中最佳配置的 Accuracy 为 0.62，距离临床可用水平仍有差距。
+    \item \textbf{系统延迟较高}：多智能体架构引入了约 3.8 倍的延迟增加（140 秒 vs 36.4 秒），主要瓶颈在于 LLM 推理时间。在实际部署场景下，用户等待时间过长可能影响使用体验。
+    \item \textbf{数据集规模有限}：原始体检数据仅 30 条记录，合成数据 200+ 条，样本量和特征维度有限，尤其是针对特定年龄段（如中老年）和复杂病症的样本较少，限制了推荐模型的泛化能力。
+    \item \textbf{医学同义词覆盖面不足}：当前同义词词典仅包含 30 组，未覆盖所有常见医学术语，可能影响检索的召回率。
+    \item \textbf{评估体系的局限性}：当前评估基于 8 个标注测试用例，样本量较小，评估结论的统计显著性有待验证。
+\end{enumerate}
+
+\subsection{改进方向}
+
+\begin{enumerate}[leftmargin=2em]
+    \item \textbf{引入更大规模的专业体检数据}：与体检中心合作获取脱敏后的真实体检数据，扩大训练和评估数据集的规模与多样性。
+    \item \textbf{优化 LLM 推理效率}：探索模型量化（如 INT8/INT4 量化）、推理缓存（KV Cache）、流式输出等技术，降低端到端延迟。
+    \item \textbf{增强安全护栏机制}：实现输入验证模块、基于 NLI 的事实性检查器（Grounding Checker）、医疗免责声明与超范围查询重定向。
+    \item \textbf{扩展医学同义词词典}：通过 LLM 辅助挖掘或接入专业医学术语数据库（如 SNOMED CT、ICD-11），将同义词词典从 30 组扩展至数百组。
+    \item \textbf{开展用户测试与迭代}：招募真实用户进行系统测试，收集使用反馈，指导后续迭代优化。
+    \item \textbf{探索模型微调}：基于领域数据对嵌入模型和重排序器进行微调，提升其在体检推荐场景下的性能。
+\end{enumerate}
+
+\section{结论}
+\label{sec:conclusion}
+
+本项目成功构建了一个基于大语言模型的多智能体检推荐系统（HCR-by-AgentOS），实现了从用户健康信息输入到个性化体检套餐推荐的端到端智能化流程。系统的核心创新在于融合 BM25 与 Dense 的混合 RAG 管线、基于反思循环的多智能体协作架构、规则引擎 + LLM 双层安全审查机制。实验评估表明，完整系统相比基线在推荐准确率（+37.8\%）、覆盖度（+36.0\%）、多样性（+20.0\%）、精确率（+45.0\%）等维度上实现了显著提升，幻觉率下降 69.2\%，验证了各核心组件的有效性和协同增益效果。
+
+项目完成了混合 RAG 检索管线、多智能体协作架构、查询分解器、医学同义词扩展、安全审查器、体检推荐引擎、体检报告生成、Web 前端、实验评估框架、合成数据生成等全部核心功能模块的开发与测试，形成了可运行的系统框架。项目中期检查时提出的推荐算法精准度不足、前端交互简单、AgentOS 架构应用深度不足、数据集规模有限等问题均已得到有效改进。
+
+未来工作将聚焦于扩大数据集规模、优化推理效率、增强安全护栏、开展用户测试等方向，推动系统向实际临床应用迈进。
+
+% ===== 附录 =====
+\newpage
+\appendix
+\section{系统运行环境}
+\label{app:env}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{ll}
+        \toprule
+        \textbf{项目} & \textbf{版本/配置} \\
+        \midrule
+        Python & 3.10 \\
+        DeepSeek V3 API & deepseek-chat \\
+        ChromaDB & 0.6.2 \\
+        OpenAI SDK & 1.59.5 \\
+        Streamlit & 1.44.0 \\
+        Embedding Model & BAAI/bge-base-zh-v1.5 \\
+        Reranker Model & BAAI/bge-reranker-v2-m3 \\
+        BM25 & rank-bm25 0.2.2 \\
+        分词器 & jieba 0.42.1 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\section{实验数据}
+\label{app:data}
+
+\subsection{消融实验详细数据}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lccccc}
+        \toprule
+        \textbf{配置} & \textbf{Accuracy} & \textbf{Coverage} & \textbf{Diversity} & \textbf{Precision} & \textbf{Latency (s)} \\
+        \midrule
+        A: Baseline & 0.45 & 0.50 & 0.60 & 0.40 & 36.4 \\
+        B: Hybrid RAG & 0.52 & 0.58 & 0.62 & 0.48 & 40.5 \\
+        C: Multi-Agent & 0.58 & 0.62 & 0.68 & 0.52 & 140.3 \\
+        D: Query Decomp & 0.55 & 0.60 & 0.65 & 0.50 & 47.7 \\
+        E: Reflection & 0.60 & 0.65 & 0.70 & 0.55 & 143.2 \\
+        F: Full System & 0.62 & 0.68 & 0.72 & 0.58 & 140.0 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{检索方法对比详细数据}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lccccc}
+        \toprule
+        \textbf{方法} & \textbf{Recall@1} & \textbf{Recall@3} & \textbf{Recall@5} & \textbf{MRR} & \textbf{nDCG@5} \\
+        \midrule
+        Pure Vector & 0.35 & 0.52 & 0.62 & 0.45 & 0.48 \\
+        BM25 Only & 0.42 & 0.58 & 0.65 & 0.52 & 0.55 \\
+        Hybrid (RRF) & 0.55 & 0.68 & 0.75 & 0.65 & 0.67 \\
+        Hybrid+Reranker & 0.58 & 0.72 & 0.78 & 0.68 & 0.70 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{安全指标详细数据}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lccc}
+        \toprule
+        \textbf{指标} & \textbf{基线} & \textbf{完整系统} & \textbf{改善幅度} \\
+        \midrule
+        Hallucination Rate & 0.91 & 0.28 & -69.2\% \\
+        Omission Rate & 0.97 & 0.32 & -67.0\% \\
+        Contraindication Detection & 0.65 & 0.85 & +30.8\% \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\section{项目文件结构}
+\label{app:structure}
+
+\begin{lstlisting}[language={}, basicstyle=\ttfamily\scriptsize, frame=single, breaklines=true]
+HCR-by-AgentOS/
++-- agentos/                  -- AgentOS 智能体框架
+|   +-- agent/                -- 基础智能体（推理-行动循环）
+|   +-- rag/                  -- RAG 组件（存储、嵌入、BM25、混合检索、重排序、切分）
+|   +-- utils/                -- DeepSeek API 封装
+|   +-- memory/               -- 智能体记忆管理
+|   `-- prompt/               -- 提示词模板
++-- config/                   -- 配置文件
++-- data/                     -- 数据文件
++-- eval/                     -- 评估框架
+|   +-- evaluator.py          -- 基础评估器
+|   +-- retrieval_eval.py     -- 检索评估
+|   +-- recommendation_eval.py-- 推荐评估
+|   +-- safety_eval.py        -- 安全评估
+|   +-- run_eval.py           -- 评估运行器
+|   +-- ablation_study.py     -- 消融实验
+|   `-- test_cases.json       -- 测试用例
++-- img/                      -- 实验图表（10 张）
++-- scripts/                  -- 工具脚本
++-- src/                      -- 核心应用逻辑
+|   +-- agents/               -- 多智能体系统（5 个智能体文件）
+|   +-- hcr.py                -- 推荐引擎（双模式）
+|   +-- tools.py              -- 工具定义
+|   +-- prompt.py             -- 系统提示词
+|   +-- vectorstore.py        -- 向量数据库构建
+|   +-- report.py             -- 报告生成
+|   +-- ontology.py           -- 医学本体（同义词扩展）
+|   `-- query_decomposer.py   -- 查询分解器
++-- test/                     -- 测试脚本
++-- web/                      -- Streamlit 前端（5 个页面）
++-- vectordb/                 -- ChromaDB 向量数据库
++-- README.md                 -- 项目说明
++-- AGENTS.md                 -- 开发者指南
++-- PLAN.md                   -- 升级计划
+`-- EXECUTE.md                -- 实施记录
+\end{lstlisting}
+
+\vfill
+\begin{center}
+    \textcolor{gray}{\small 报告撰写日期：2026 年 4 月}
+\end{center}
+
+\end{document}
