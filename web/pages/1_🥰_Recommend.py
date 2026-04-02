@@ -89,23 +89,23 @@ submitted = st.button("Recommend", icon='✔️', use_container_width=True)
 
 
 if submitted:
-    if not DEEPSEEK_API_KEY.startswith("tgp"):
-        pass
+    if not DEEPSEEK_API_KEY.startswith("sk-"):
+        st.error("Please enter a valid DeepSeek API Key (starts with sk-)", icon="🚨")
+    elif height == 50 or age == 0 or weight == 40 or not medical_history.strip() or not symptoms.strip():
+        st.error("Please fill in all the information", icon="🚨")
     else:
-        if height == 50 or age == 0 or weight == 40 or not medical_history.strip() or not symptoms.strip():
-            st.error("Please fill in all the information", icon="🚨")
-        else:
-            re= Recommendation(DEEPSEEK_API_KEY)
-            user_info = format_user_info(gender, age, height, weight, medical_history, symptoms, id)
-            with st.spinner("analyzing...",show_time=True):
-                start = time.time()
-                result = re.run(user_info)
-                with st.sidebar.expander(label="TEST",expanded=True):
-                    st.success(f"successfully(time:{time.time()-start:.1f}s)")
-                    st.write(user_info)
-                with st.expander("RECOMMENDATIONS", expanded=True):
-                    st.markdown("## RECOMMENDATIONS")
-                    st.write(result)
+        re = Recommendation(DEEPSEEK_API_KEY)
+        user_info = format_user_info(gender, age, height, weight, medical_history, symptoms, id)
+        with st.spinner("analyzing...", show_time=True):
+            start = time.time()
+            result = re.run(user_info)
+            with st.sidebar.expander(label="TEST", expanded=True):
+                st.success(f"successfully(time:{time.time()-start:.1f}s)")
+                st.write(user_info)
+            with st.expander("RECOMMENDATIONS", expanded=True):
+                st.markdown("## RECOMMENDATIONS")
+                st.write(result)
+                if result:
                     st.download_button(label="Download", data=result, file_name="Recommendations.md", use_container_width=True, icon="📥")
 
 
@@ -119,9 +119,9 @@ if view_history:
         st.markdown("## History Records")
         for record in history:
             st.write(f"Timestamp: {record[-1]}")
-            st.write(f"User Info: {record[1:-2]}")
+            st.write(f"User Info: {record[1:-3]}")
             st.write("Recommendation:")
-            st.write(f"{record[-2]}")
+            st.write(f"{record[-3]}")
             st.write("---")
     else:
         st.warning("No history records found.", icon="⚠️")
