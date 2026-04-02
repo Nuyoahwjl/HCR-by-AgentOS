@@ -1,7 +1,6 @@
 .env
 **/__pycache__/
 **/__init__.py
-AGENTS.md
 EXECUTE.md
 PLAN.md
 history.db
