@@ -80,10 +80,10 @@ HCR-by-AgentOS/
 ├── web/
 │   ├── 🩺HCR-HOME.py                # Streamlit entry point
 │   └── pages/
-│       ├── 1_🥰_Recommend.py         # Recommendation page
-│       ├── 2_🤖_Chatbot.py           # Chatbot page
-│       ├── 3_🏥_Hospitals.py         # Nearby hospitals page
-│       └── 4_📄_Report.py            # Report generation page
+│       ├── 1_🥰_Recommend.py        # Recommendation page
+│       ├── 2_🤖_Chatbot.py          # Chatbot page
+│       ├── 3_🏥_Hospitals.py        # Nearby hospitals page
+│       └── 4_📄_Report.py           # Report generation page
 ├── test/
 │   └── hcr_test.py                  # Manual integration test
 ├── vectordb/                        # ChromaDB vector store (generated)
