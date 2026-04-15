@@ -3,7 +3,7 @@
 
 # 🩺 Health Check Recommendation (HCR)
 
-A multi-agent RAG system for personalized health check package recommendation, built on the [AgentOS](https://github.com/QinbinLi/AgentOS) framework and powered by [DeepSeek V3](https://github.com/deepseek-ai/DeepSeek-V3).
+A multi-agent RAG system for personalized health check package recommendation, built on the [AgentOS](https://github.com/Nuyoahwjl/HCR-by-AgentOS/tree/dev/agentos) framework and powered by [DeepSeek V3](https://github.com/deepseek-ai/DeepSeek-V3).
 
 
 ## Features
@@ -199,7 +199,6 @@ User Profile
 Final Recommendation + Citations
 ```
 
-
 ## 💻 Tech Stack
 
 | Component          | Technology                              |
@@ -238,10 +237,4 @@ Run the ablation study to compare configurations:
 | No Synonyms      |  ✓   |  ✓    |   ✓    |    ✗     |
 | Dense Only       |  ✗   |  ✓    |   ✗    |    ✗     |
 
-
-## 🔒 Safety
-
-- Safety rules validation against clinical guidelines
-- Input sanitization for user profiles
-- The Safety Checker agent flags potentially harmful recommendations
-- API keys are stored in `.env` (gitignored) — never commit secrets
+![](./img/structure-2.png)
