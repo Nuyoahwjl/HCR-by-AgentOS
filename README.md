@@ -237,4 +237,4 @@ Run the ablation study to compare configurations:
 | No Synonyms      |  ✓   |  ✓    |   ✓    |    ✗     |
 | Dense Only       |  ✗   |  ✓    |   ✗    |    ✗     |
 
-![](./img/structure-2.png)
+![](./img/structure-3.png)
